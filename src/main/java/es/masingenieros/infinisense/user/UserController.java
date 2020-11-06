@@ -22,7 +22,7 @@ import es.masingenieros.infinisense.security.JwtUtil;
 import es.masingenieros.infinisense.user.service.UserService;
 
 @RestController
-@RequestMapping("/api/user/")
+@RequestMapping("/api/user")
 public class UserController {
 	@Autowired
 	private UserService userService;

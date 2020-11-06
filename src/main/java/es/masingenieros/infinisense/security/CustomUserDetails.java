@@ -17,6 +17,7 @@ public class CustomUserDetails implements UserDetails{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private User user;
 	private String userName;
 	private String password;
 	private boolean active;
@@ -27,6 +28,7 @@ public class CustomUserDetails implements UserDetails{
 	}
 
 	public CustomUserDetails(User user) {
+		this.user = user;
 		this.userName = user.getUserName();
 		this.password = user.getPassword();
 		this.active = user.isActive();
@@ -70,4 +72,7 @@ public class CustomUserDetails implements UserDetails{
 		return active;
 	}
 
+	public User getUser() {
+		return user;
+	}
 }

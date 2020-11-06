@@ -8,7 +8,7 @@ import java.util.Optional;
 import es.masingenieros.infinisense.user.User;
 
 /* Capa para persistir la información */
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<User, String> {
 
 	Optional<User> findByUserName(String userName);
 	

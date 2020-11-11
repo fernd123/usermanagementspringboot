@@ -1,9 +1,18 @@
 package es.masingenieros.infinisense.user;
 
+import java.io.InputStream;
+import java.sql.Blob;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 
 import es.masingenieros.infinisense.lib.DomainObject;
+import es.masingenieros.infinisense.visit.Visit;
 
 @Entity
 public class User extends DomainObject{
@@ -13,19 +22,18 @@ public class User extends DomainObject{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String userName;
+	private String username;
 
 	private String password;
 
-	private String firstName;
+	private String firstname;
 
-	private String lastName;
+	private String lastname;
 	
 	private boolean active;
 	
 	private String roles;
 
-	@Column(nullable = false, unique = true)
 	private String email;
     
 	@Column(nullable = false, unique = true)
@@ -33,15 +41,19 @@ public class User extends DomainObject{
     
 	@Column(nullable = false)
     private String company;
+		
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Visit> visit = new HashSet<Visit>();
+	
+	/*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserSignature signature;*/
     
-	private String token;
-
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -52,20 +64,20 @@ public class User extends DomainObject{
 		this.password = password;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getFirstname() {
+		return firstname;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getLastname() {
+		return lastname;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setLastName(String lastname) {
+		this.lastname = lastname;
 	}
 
 	public String getEmail() {
@@ -74,14 +86,6 @@ public class User extends DomainObject{
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
 	}
 
 	public String getDni() {
@@ -115,4 +119,5 @@ public class User extends DomainObject{
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
+
 }

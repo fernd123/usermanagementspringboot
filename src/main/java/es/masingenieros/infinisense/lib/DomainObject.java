@@ -14,13 +14,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.hateoas.RepresentationModel;
+
+import es.masingenieros.infinisense.user.User;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class DomainObject implements Serializable {
 
 	private static final long serialVersionUID = 8831874312070026914L;
-
+	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")

@@ -18,7 +18,7 @@ public class CustomUserDetails implements UserDetails{
 	 */
 	private static final long serialVersionUID = 1L;
 	private User user;
-	private String userName;
+	private String username;
 	private String password;
 	private boolean active;
 	private List<GrantedAuthority> authorities;
@@ -29,7 +29,7 @@ public class CustomUserDetails implements UserDetails{
 
 	public CustomUserDetails(User user) {
 		this.user = user;
-		this.userName = user.getUserName();
+		this.username = user.getUsername();
 		this.password = user.getPassword();
 		this.active = user.isActive();
 		this.authorities = Arrays.stream(user.getRoles().split(","))
@@ -49,7 +49,7 @@ public class CustomUserDetails implements UserDetails{
 
 	@Override
 	public String getUsername() {
-		return userName;
+		return username;
 	}
 
 	@Override

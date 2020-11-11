@@ -16,6 +16,10 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
 			return null;
 		}
 
-		return Optional.of(((CustomUserDetails) authentication.getPrincipal()).getUser().getUuid());
+		if(authentication.getPrincipal().equals("anonymousUser")) {
+			return Optional.of("0");
+		}else {
+			return Optional.of(((CustomUserDetails) authentication.getPrincipal()).getUser().getUuid());
+		}
 	}
 }

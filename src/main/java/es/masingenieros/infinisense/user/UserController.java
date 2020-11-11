@@ -70,8 +70,9 @@ public class UserController {
 		}
 	}
 
-	@GetMapping(path="all")
+	@GetMapping()
 	public @ResponseBody Iterable<User> getAllUsers() {
 		return userService.findAll();
 	}
+	
 }

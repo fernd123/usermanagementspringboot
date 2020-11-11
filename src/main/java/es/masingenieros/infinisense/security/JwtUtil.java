@@ -45,7 +45,7 @@ public class JwtUtil {
 				.setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 				//.claim("UserType", "Purple")// Custom data
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-				.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+				.signWith(SignatureAlgorithm.HS384, SECRET_KEY).compact();
 	}
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = extractUsername(token);

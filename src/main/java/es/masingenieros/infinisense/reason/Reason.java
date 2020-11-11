@@ -1,9 +1,15 @@
 package es.masingenieros.infinisense.reason;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 import es.masingenieros.infinisense.lib.DomainObject;
+import es.masingenieros.infinisense.visit.Visit;
 
 @Entity
 public class Reason extends DomainObject{
@@ -17,6 +23,10 @@ public class Reason extends DomainObject{
 	private String name;
 
 	private String description;
+	
+    @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
+    private Set<Visit> visit = new HashSet<Visit>();
+
 
 	public String getName() {
 		return name;

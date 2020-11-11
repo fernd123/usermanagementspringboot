@@ -42,4 +42,9 @@ public class ReasonServiceImpl implements ReasonService{
 	public Iterable<Reason> findAll() {
 		return reasonRepository.findAll();
 	}
+
+	@Override
+	public Optional<Reason> getReasonByUuid(String uuid) {
+		return reasonRepository.findById(uuid);
+	}
 }

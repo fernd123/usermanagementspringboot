@@ -10,9 +10,10 @@ import es.masingenieros.infinisense.user.User;
 /* Capa para persistir la información */
 public interface UserRepository extends CrudRepository<User, String> {
 
-	Optional<User> findByUserName(String userName);
+	Optional<User> findByUsername(String userName);
 	
 	@Query("select password from User u where u.id = ?1")
 	String getUserPassword(String uuid);
 
+	Optional<User> findByDni(String dni);
 }

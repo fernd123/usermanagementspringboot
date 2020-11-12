@@ -4,5 +4,6 @@ import es.masingenieros.infinisense.visit.Visit;
 
 public interface VisitService{
 	Visit save(Visit visit);
-	Iterable<Visit> findAll();
+	Iterable<Visit> findAll(String filter);
+	Visit update(Visit visit);
 }

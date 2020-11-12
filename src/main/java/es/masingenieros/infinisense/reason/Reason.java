@@ -24,6 +24,8 @@ public class Reason extends DomainObject{
 
 	private String description;
 	
+	private Boolean active;
+	
     @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
     private Set<Visit> visit = new HashSet<Visit>();
 
@@ -42,6 +44,14 @@ public class Reason extends DomainObject{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 	

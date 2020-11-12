@@ -40,11 +40,11 @@ public class ReasonController {
 		}
 	}
 	
-	@PutMapping("/{uuid}")
-	public ResponseEntity<?> updateReason(@PathVariable(value = "uuid") String uuid, @RequestBody Reason reason) {
+	@PutMapping()
+	public ResponseEntity<?> updateReason(@RequestBody Reason reason) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
-					.body(reasonService.update(uuid, reason));
+					.body(reasonService.update(reason));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}

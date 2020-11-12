@@ -1,6 +1,11 @@
 package es.masingenieros.infinisense.visit.service.impl;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import es.masingenieros.infinisense.visit.Visit;
@@ -19,7 +24,23 @@ public class VisitServiceImpl implements VisitService{
 	}
 
 	@Override
-	public Iterable<Visit> findAll() {
-		return visitRepository.findAll();
+	public Iterable<Visit> findAll(String filter) {
+		//TODO: Filtrar por fechas
+		Iterable<Visit> visitList = visitRepository.findAll(); // Sort.by(Sort.Direction.DESC, "startDate")
+		return visitList;
+	}
+
+	@Override
+	public Visit update(Visit visit) {
+		Optional<Visit> visitOpt = visitRepository.findById(visit.getUuid());
+		Visit visitInDb = visitOpt.isPresent() ? visitOpt.get() : null;
+		if(visitInDb == null) {
+			return null;
+		}
+		Date date = new Date();
+		if(visitInDb.getEndDate() == null) {
+			visitInDb.setEndDate(new Timestamp(date.getTime()));
+		}
+		return visitRepository.save(visitInDb);
 	}
 }

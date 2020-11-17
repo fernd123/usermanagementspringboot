@@ -1,6 +1,13 @@
 package es.masingenieros.infinisense.plant;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import es.masingenieros.infinisense.lib.DomainObject;
 
@@ -18,6 +25,10 @@ public class Plant extends DomainObject{
 	private String alternativePhone;
 	
 	private Integer maximumCapacity;
+	
+	//@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
+    //@type="list"(access = JsonProperty.Access.READ_ONLY)
+    //private Set<PlantPlane> plantPlane = new HashSet<PlantPlane>();
 
 	public String getName() {
 		return name;

@@ -1,8 +1,5 @@
 package es.masingenieros.infinisense.visit;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -11,16 +8,12 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.util.Base64;
 
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

@@ -23,11 +23,14 @@ public class PlantServiceImpl implements PlantService{
 	}
 
 	@Override
-	public Plant update(String id, Plant plant) {
-		Optional<Plant> optReason = plantRepository.findById(id);
+	public Plant update(String uuid, Plant plant) {
+		Optional<Plant> optReason = plantRepository.findById(uuid);
 		Plant plantInDB = optReason.get();
 		plantInDB.setName(plant.getName());
-//		plantInDB.setDescription(plant.getDescription());
+		plantInDB.setPhone(plant.getPhone());
+		plantInDB.setLocation(plant.getLocation());
+		plantInDB.setAlternativePhone(plant.getAlternativePhone());
+		plantInDB.setMaximumCapacity(plant.getMaximumCapacity());
 		return plantRepository.save(plantInDB);
 
 	}
@@ -42,5 +45,10 @@ public class PlantServiceImpl implements PlantService{
 	@Override
 	public Iterable<Plant> findAll() {
 		return plantRepository.findAll();
+	}
+
+	@Override
+	public Optional<Plant> findById(String uuid) {
+		return plantRepository.findById(uuid);
 	}
 }

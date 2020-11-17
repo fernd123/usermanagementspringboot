@@ -51,7 +51,4 @@ public class UserSignature extends DomainObject{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
-
 }

@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,10 +26,7 @@ public class ReasonController {
 
 	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> saveReason(@RequestParam Map<String, String> values) throws Exception{
-		Reason reason = new Reason();
-		reason.setName(values.get("name"));
-		reason.setDescription(values.get("description"));
-
+		Reason reason = createReason(values);
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(reasonService.save(reason));
@@ -40,11 +35,12 @@ public class ReasonController {
 		}
 	}
 	
-	@PutMapping()
-	public ResponseEntity<?> updateReason(@RequestBody Reason reason) {
+	@RequestMapping(value="/{uuid}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ResponseEntity<?> updateReason(@PathVariable(value = "uuid") String uuid, @RequestParam Map<String, String> values) throws Exception{
+		Reason reason = createReason(values);
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
-					.body(reasonService.update(reason));
+					.body(reasonService.update(uuid, reason));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
@@ -68,5 +64,13 @@ public class ReasonController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
+	}
+	
+	private Reason createReason(Map<String, String> values) {
+		Reason reason = new Reason();
+		reason.setName(values.get("name"));
+		reason.setDescription(values.get("description"));
+		reason.setActive(Boolean.valueOf(values.get("active")));
+		return reason;
 	}
 }

@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import es.masingenieros.infinisense.lib.DomainObject;
 import es.masingenieros.infinisense.visit.Visit;
 
@@ -27,6 +29,7 @@ public class Reason extends DomainObject{
 	private Boolean active;
 	
     @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
+    //@JsonProperty(access = JsonProperty.Access.AUTO)
     private Set<Visit> visit = new HashSet<Visit>();
 
 

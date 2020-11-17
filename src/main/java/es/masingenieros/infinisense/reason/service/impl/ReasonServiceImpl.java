@@ -22,14 +22,13 @@ public class ReasonServiceImpl implements ReasonService{
 	}
 
 	@Override
-	public Reason update(Reason reason) {
-		Optional<Reason> optReason = reasonRepository.findById(reason.getUuid());
+	public Reason update(String uuid, Reason reason) {
+		Optional<Reason> optReason = reasonRepository.findById(uuid);
 		Reason reasonInDB = optReason.get();
 		reasonInDB.setName(reason.getName());
 		reasonInDB.setDescription(reason.getDescription());
 		reasonInDB.setActive(reason.getActive());
 		return reasonRepository.save(reasonInDB);
-
 	}
 
 	@Override

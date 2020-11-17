@@ -23,12 +23,12 @@ public class Visit extends DomainObject{
 	
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reason_id")
-    @JsonProperty(access = JsonProperty.Access.AUTO)
+    //@JsonProperty(access = JsonProperty.Access.AUTO)
 	private Reason reason;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.AUTO)
+    //@JsonProperty(access = JsonProperty.Access.AUTO)
 	private User user;
 	
 	private Timestamp startDate;

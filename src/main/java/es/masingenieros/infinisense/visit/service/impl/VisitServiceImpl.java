@@ -26,7 +26,7 @@ public class VisitServiceImpl implements VisitService{
 	@Override
 	public Iterable<Visit> findAll(String filter) {
 		//TODO: Filtrar por fechas
-		Iterable<Visit> visitList = visitRepository.findAll(); // Sort.by(Sort.Direction.DESC, "startDate")
+		Iterable<Visit> visitList = visitRepository.findAll(Sort.by(Sort.Direction.DESC, "startDate"));
 		return visitList;
 	}
 

@@ -69,10 +69,4 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getLocalizedMessage());
 		}
 	}
-
-	@GetMapping()
-	public @ResponseBody Iterable<User> getAllUsers() {
-		return userService.findAll();
-	}
-	
 }

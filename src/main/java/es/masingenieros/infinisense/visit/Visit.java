@@ -7,8 +7,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import es.masingenieros.infinisense.lib.DomainObject;
 import es.masingenieros.infinisense.reason.Reason;
 import es.masingenieros.infinisense.user.User;
@@ -57,10 +55,5 @@ public class Visit extends DomainObject{
 	}
 	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
-	}
-	
-	
-	
-	
-	
+	}	
 }

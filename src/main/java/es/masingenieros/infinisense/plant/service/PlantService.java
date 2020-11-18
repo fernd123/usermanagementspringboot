@@ -8,7 +8,7 @@ import es.masingenieros.infinisense.plant.Plant;
 public interface PlantService{
 	Plant save(Plant plant);
 	Plant update(String uuid, Plant plant);
-	void deleteReasonById(List<String> reasonUuids);
+	void deletePlantById(List<String> reasonUuids);
 	Iterable<Plant> findAll();
 	Optional<Plant> findById(String uuid);
 }

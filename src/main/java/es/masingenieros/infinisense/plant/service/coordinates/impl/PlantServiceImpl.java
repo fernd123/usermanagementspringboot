@@ -1,4 +1,4 @@
-package es.masingenieros.infinisense.plant.service.impl;
+package es.masingenieros.infinisense.plant.service.coordinates.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import es.masingenieros.infinisense.plant.Plant;
 import es.masingenieros.infinisense.plant.repository.PlantRepository;
 import es.masingenieros.infinisense.plant.service.PlantService;
-import es.masingenieros.infinisense.reason.service.repository.ReasonRepository;
+import es.masingenieros.infinisense.reason.repository.ReasonRepository;
 
 @Service
 public class PlantServiceImpl implements PlantService{
@@ -36,7 +36,7 @@ public class PlantServiceImpl implements PlantService{
 	}
 
 	@Override
-	public void deleteReasonById(List<String> userUuids) {
+	public void deletePlantById(List<String> userUuids) {
 		for (String id : userUuids) {
 			plantRepository.deleteById(id);
 		}

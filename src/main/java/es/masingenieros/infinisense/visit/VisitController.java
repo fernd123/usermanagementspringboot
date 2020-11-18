@@ -75,7 +75,7 @@ public class VisitController {
 			}
 
 			/* Get reason */
-			Optional<Reason> reason = reasonService.getReasonByUuid(reasonUuid);
+			Optional<Reason> reason = reasonService.findReasonByUuid(reasonUuid);
 			if(reason.get() == null) {
 				throw new Exception("Reason with uuid "+ reasonUuid + "does not exist");
 			}

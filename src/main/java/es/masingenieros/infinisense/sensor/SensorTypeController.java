@@ -1,9 +1,8 @@
-package es.masingenieros.infinisense.reason;
+package es.masingenieros.infinisense.sensor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,87 +15,74 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.masingenieros.infinisense.plant.PlantCoordinates;
-import es.masingenieros.infinisense.plant.service.coordinates.PlantCoordinatesService;
-import es.masingenieros.infinisense.reason.service.ReasonService;
+import es.masingenieros.infinisense.sensor.service.SensorTypeService;
 
 @RestController
-@RequestMapping("/api/reason")
-public class ReasonController {
-
+@RequestMapping("/api/sensortype")
+public class SensorTypeController {
+	
 	@Autowired 
-	ReasonService reasonService;
-
-	@Autowired 
-	PlantCoordinatesService plantCoordinatesService;
+	SensorTypeService sensorTypeService;
 
 	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> saveReason(@RequestParam Map<String, String> values) throws Exception{
-		Reason reason = createReason(values);
+		SensorType sensorType = createSensorType(values);
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED)
-					.body(reasonService.save(reason));
+					.body(sensorTypeService.save(sensorType));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-
+	
 	@RequestMapping(value="/{uuid}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> updateReason(@PathVariable(value = "uuid") String uuid, @RequestParam Map<String, String> values) throws Exception{
-		Reason reason = createReason(values);
+		SensorType sensorType = createSensorType(values);
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
-					.body(reasonService.update(uuid, reason));
+					.body(sensorTypeService.update(uuid, sensorType));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-
-	@RequestMapping(value="/{uuid}", method=RequestMethod.DELETE)
-	public ResponseEntity<?> deleteReason(@PathVariable(value = "uuid") String uuid){
-		List<String> reasonsIds = new ArrayList<String>();
-		reasonsIds.add(uuid);
+	
+	@RequestMapping(value="/{uuid}", method=RequestMethod.GET)
+	public ResponseEntity<?> updateReason(@PathVariable(value = "uuid") String uuid) throws Exception{
 		try {
-			reasonService.deleteReasonById(reasonsIds);
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(sensorTypeService.findSensorTypeByUuid(uuid));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+	
+	@RequestMapping(value="/{uuid}", method=RequestMethod.DELETE)
+	public ResponseEntity<?> deleteSensorType(@PathVariable(value = "uuid") String uuid){
+		List<String> sensorTypeIds = new ArrayList<String>();
+		sensorTypeIds.add(uuid);
+		try {
+			sensorTypeService.deleteSensorTypeById(sensorTypeIds);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-
-	@RequestMapping(value="/{uuid}", method=RequestMethod.GET)
-	public ResponseEntity<?> getReasonByUuid(@PathVariable(value = "uuid") String uuid) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(reasonService.findReasonByUuid(uuid));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-	}
-
+	
+	
 	@GetMapping
 	public ResponseEntity<?> getAllReasons() {
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(reasonService.findAll());
+			return ResponseEntity.status(HttpStatus.OK).body(sensorTypeService.findAll());
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-
-	private Reason createReason(Map<String, String> values) {
-		Reason reason = new Reason();
-		reason.setName(values.get("name"));
-		reason.setDescription(values.get("description"));
-		reason.setActive(Boolean.valueOf(values.get("active")));
-
-		String plantZoneId = values.get("plantZone");
-		PlantCoordinates plantCoords = null;
-		if(plantZoneId != null) {			
-			Optional<PlantCoordinates> planCoordinatesOpt = this.plantCoordinatesService.findById(values.get("plantZone"));
-			plantCoords = planCoordinatesOpt.isPresent() ? planCoordinatesOpt.get() : null;
-			if(plantCoords != null)
-				reason.setPlantZone(plantCoords);
-		}
-
-		return reason;
+	
+	private SensorType createSensorType(Map<String, String> values) {
+		SensorType sensorType = new SensorType();
+		sensorType.setName(values.get("name"));
+		sensorType.setDescription(values.get("description"));
+		sensorType.setActive(Boolean.valueOf(values.get("active")));
+		return sensorType;
 	}
 }

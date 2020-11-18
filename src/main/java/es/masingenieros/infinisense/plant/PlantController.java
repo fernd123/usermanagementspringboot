@@ -1,5 +1,8 @@
 package es.masingenieros.infinisense.plant;
 
+import java.net.FileNameMap;
+import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,8 +25,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.masingenieros.infinisense.filestorage.FileResponse;
 import es.masingenieros.infinisense.filestorage.StorageService;
+import es.masingenieros.infinisense.plant.repository.PlantCoordinatesRepository;
 import es.masingenieros.infinisense.plant.repository.PlantPlaneRepository;
 import es.masingenieros.infinisense.plant.service.PlantService;
+import es.masingenieros.infinisense.plant.service.coordinates.PlantCoordinatesService;
 
 @RestController
 @RequestMapping("/api/plant")
@@ -31,9 +36,15 @@ public class PlantController {
 
 	@Autowired 
 	PlantService plantService;
+	
+	@Autowired 
+	PlantCoordinatesService plantCoordsService;
 
 	@Autowired
 	PlantPlaneRepository plantPlaneRepository;
+	
+	@Autowired
+	PlantCoordinatesRepository plantCoordsRepository;
 
 	@Autowired
 	private StorageService storageService;
@@ -65,7 +76,7 @@ public class PlantController {
 	@DeleteMapping
 	public ResponseEntity<?> deletePlant(@RequestParam List<String> reasonIds){
 		try {
-			plantService.deleteReasonById(reasonIds);
+			plantService.deletePlantById(reasonIds);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -95,7 +106,7 @@ public class PlantController {
 	public ResponseEntity<?> getPlanePlant(@PathVariable(value = "uuid") String uuid) {
 		try {
 			Optional<Plant> plantOpt = plantService.findById(uuid);
-			Plant plant = plantOpt.orElseThrow();
+			Plant plant = plantOpt.get();
 			return ResponseEntity.status(HttpStatus.OK).body(plantPlaneRepository.findByPlant(plant));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -107,7 +118,7 @@ public class PlantController {
 			@RequestParam("file") MultipartFile file) {
 		try {
 			Optional<Plant> plantOpt = plantService.findById(uuid);
-			Plant plant = plantOpt.orElseThrow();
+			Plant plant = plantOpt.get();
 
 
 			String name = storageService.store(file);
@@ -130,23 +141,128 @@ public class PlantController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
+	
+	@RequestMapping(value="/{plantUuid}/upload/{uuid}", method=RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> updatePlantPlane(@PathVariable(value = "plantUuid") String plantUuid, @PathVariable(value = "uuid") String uuid,
+			@RequestParam("file") MultipartFile file) {
+		try {
+			Optional<Plant> plantOpt = plantService.findById(plantUuid);
+			Plant plant = plantOpt.get();
+
+			String name = storageService.store(file);
+
+			String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+					.path("/download/")
+					.path(name)
+					.toUriString();
+
+			Optional<PlantPlane> plantPlaneOpt = this.plantPlaneRepository.findById(uuid);
+			PlantPlane plantPlaneInDb = plantPlaneOpt.get();
+			
+			plantPlaneInDb.setPlant(plant);
+			plantPlaneInDb.setPath(uri);
+			plantPlaneInDb.setName(name);
+			plantPlaneRepository.save(plantPlaneInDb);
+
+			FileResponse fr = new FileResponse(name, uri, file.getContentType(), file.getSize());
+			return ResponseEntity.status(HttpStatus.OK).body(fr);
+		} catch (Exception e) {
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
 
 	@RequestMapping(value="/planes/download/{filename}", method=RequestMethod.GET)
 	public ResponseEntity<?> downloadFile(@PathVariable(value = "filename") String filename) {
 		try {
 			Resource resource = storageService.loadAsResource(filename);
 
+			HttpHeaders headers = new HttpHeaders();
+			headers.add(HttpHeaders.CONTENT_DISPOSITION,
+					"attachment; filename=" + resource.getFilename());
+			
+			FileNameMap fileNameMap = URLConnection.getFileNameMap();
+			headers.add(HttpHeaders.CONTENT_TYPE,
+					fileNameMap.getContentTypeFor(resource.getFile().getName()));
+			
 			return ResponseEntity.ok()
-					.header(HttpHeaders.CONTENT_DISPOSITION,
-							"attachment; filename=\"" + resource.getFilename() + "\"")
+					.headers(headers)
 					.body(resource);
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
+	
+	/** PLANT COORDINATES **/
+	@RequestMapping(value="/{uuid}/coordinates", method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ResponseEntity<?> savePlantCoordinates(@PathVariable(value = "uuid") String plantUuid, @RequestParam Map<String, String> values) {
+		
+		PlantCoordinates plantCoordinates = createPlantCoordinates(values);
+		
+		try {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(plantCoordsService.save(plantUuid, plantCoordinates));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+	
+	@RequestMapping(value="/{plantUuid}/coordinates/{uuid}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ResponseEntity<?> updatePlantCoordinates(@PathVariable(value = "plantUuid") String plantUuid, @PathVariable(value = "uuid") String uuid, @RequestParam Map<String, String> values) {
+		
+		PlantCoordinates plantCoordinates = createPlantCoordinates(values);
+		
+		try {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(plantCoordsService.update(uuid, plantCoordinates));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+	
+	@RequestMapping(value="/{plantUuid}/coordinates/{uuid}", method=RequestMethod.DELETE)
+	public ResponseEntity<?> deletePlantCoordinate(@PathVariable(value = "uuid") String uuid){
+		try {
+			List<String> plantCoordinateUuids = new ArrayList<String>();
+			plantCoordinateUuids.add(uuid);
+			plantCoordsService.deletePlantCoordinate(plantCoordinateUuids);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+	
+	@RequestMapping(value="/{plantUuid}/coordinates/{uuid}", method=RequestMethod.GET)
+	public ResponseEntity<?> getPlantCoordinatesByUuid(@PathVariable(value = "plantUuid") String plantUuid, @PathVariable(value = "uuid") String uuid) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(plantCoordsService.findByPlantCoordinatesUuid(uuid));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	
+	@RequestMapping(value="/{uuid}/coordinates", method=RequestMethod.GET)
+	public ResponseEntity<?> getPlantCoordinates(@PathVariable(value = "uuid") String uuid) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(plantCoordsService.findByPlantUuid(uuid));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
 
 
-
+	private PlantCoordinates createPlantCoordinates(Map<String, String> values) {
+		PlantCoordinates plantCoordinates = new PlantCoordinates();
+		plantCoordinates.setSensorId(values.get("sensorId"));
+		plantCoordinates.setCoordinates(values.get("coordinates"));
+		plantCoordinates.setName(values.get("name"));
+		plantCoordinates.setVirtualZoneType(values.get("virtualZoneType"));
+		plantCoordinates.setSensorType(values.get("sensorType"));
+		return plantCoordinates;
+	}
+	
+	
 	private Plant createPlant(Map<String, String> values) {
 		Plant plant = new Plant();
 		plant.setName(values.get("name"));

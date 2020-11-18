@@ -1,4 +1,4 @@
-package es.masingenieros.infinisense.reason;
+package es.masingenieros.infinisense.sensor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,20 +6,15 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import es.masingenieros.infinisense.lib.DomainObject;
-import es.masingenieros.infinisense.plant.Plant;
-import es.masingenieros.infinisense.plant.PlantCoordinates;
 import es.masingenieros.infinisense.visit.Visit;
 
 @Entity
-public class Reason extends DomainObject{
+public class SensorType extends DomainObject{
 
 	/**
 	 * 
@@ -32,31 +27,6 @@ public class Reason extends DomainObject{
 	private String description;
 	
 	private Boolean active;
-	
-	@Column(nullable = true)
-    @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
-    //@JsonProperty(access = JsonProperty.Access.AUTO)
-    private Set<Visit> visit = new HashSet<Visit>();
-
-	@OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "plant_coordinate_id")
-    private PlantCoordinates plantZone;
-
-	public Set<Visit> getVisit() {
-		return visit;
-	}
-
-	public void setVisit(Set<Visit> visit) {
-		this.visit = visit;
-	}
-
-	public PlantCoordinates getPlantZone() {
-		return plantZone;
-	}
-
-	public void setPlantZone(PlantCoordinates plantZone) {
-		this.plantZone = plantZone;
-	}
 
 	public String getName() {
 		return name;
@@ -81,8 +51,4 @@ public class Reason extends DomainObject{
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	
-	
-	
 }

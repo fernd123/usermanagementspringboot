@@ -1,4 +1,4 @@
-package es.masingenieros.infinisense.reason.service.repository;
+package es.masingenieros.infinisense.reason.repository;
 
 import java.util.Optional;
 

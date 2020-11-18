@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.masingenieros.infinisense.reason.Reason;
+import es.masingenieros.infinisense.reason.repository.ReasonRepository;
 import es.masingenieros.infinisense.reason.service.ReasonService;
-import es.masingenieros.infinisense.reason.service.repository.ReasonRepository;
 
 @Service
 public class ReasonServiceImpl implements ReasonService{
@@ -28,6 +28,7 @@ public class ReasonServiceImpl implements ReasonService{
 		reasonInDB.setName(reason.getName());
 		reasonInDB.setDescription(reason.getDescription());
 		reasonInDB.setActive(reason.getActive());
+		reasonInDB.setPlantZone(reason.getPlantZone());
 		return reasonRepository.save(reasonInDB);
 	}
 
@@ -44,7 +45,7 @@ public class ReasonServiceImpl implements ReasonService{
 	}
 
 	@Override
-	public Optional<Reason> getReasonByUuid(String uuid) {
+	public Optional<Reason> findReasonByUuid(String uuid) {
 		return reasonRepository.findById(uuid);
 	}
 }

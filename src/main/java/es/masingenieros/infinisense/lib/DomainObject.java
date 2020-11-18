@@ -22,7 +22,7 @@ import es.masingenieros.infinisense.user.User;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class DomainObject implements Serializable {
 
-	private static final long serialVersionUID = 8831874312070026914L;
+	private static final long serialVersionUID = 8831874312070026914L; 
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")

@@ -11,5 +11,5 @@ public interface ReasonService {
 	Reason update(String uuid, Reason reason);
 	void deleteReasonById(List<String> reasonUuids);
 	Iterable<Reason> findAll();
-	Optional<Reason> getReasonByUuid(String uuid);
+	Optional<Reason> findReasonByUuid(String uuid);
 }

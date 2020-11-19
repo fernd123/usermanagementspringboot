@@ -53,7 +53,6 @@ public class PlantCoordinatesServiceImp implements PlantCoordinatesService{
 	public PlantCoordinates update(String uuid, PlantCoordinates plantCoordinates) {
 		Optional<PlantCoordinates> plantOpt = plantCoordinatesRepository.findById(uuid);
 		PlantCoordinates plantInDB = plantOpt.get();		
-		plantInDB.setName(plantCoordinates.getName());
 		plantInDB.setCoordinates(plantCoordinates.getCoordinates());
 		plantInDB.setName(plantCoordinates.getName());
 		plantInDB.setSensorId(plantCoordinates.getSensorId());

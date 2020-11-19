@@ -7,11 +7,15 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import es.masingenieros.infinisense.lib.DomainObject;
 import es.masingenieros.infinisense.reason.Reason;
 import es.masingenieros.infinisense.user.User;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class Visit extends DomainObject{
 
 	/**
@@ -19,13 +23,15 @@ public class Visit extends DomainObject{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reason_id")
+	//@JsonIgnore 
     //@JsonProperty(access = JsonProperty.Access.AUTO)
 	private Reason reason;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+	//@JsonIgnore 
     //@JsonProperty(access = JsonProperty.Access.AUTO)
 	private User user;
 	

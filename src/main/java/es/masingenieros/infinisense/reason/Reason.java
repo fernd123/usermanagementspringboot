@@ -1,30 +1,32 @@
 package es.masingenieros.infinisense.reason;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import es.masingenieros.infinisense.lib.DomainObject;
-import es.masingenieros.infinisense.plant.Plant;
 import es.masingenieros.infinisense.plant.PlantCoordinates;
 import es.masingenieros.infinisense.visit.Visit;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-public class Reason extends DomainObject{
+public class Reason extends DomainObject implements Serializable{
+
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8686913333975224466L;
 
 	@Column(nullable = false, unique = true)
 	private String name;
@@ -35,11 +37,13 @@ public class Reason extends DomainObject{
 	
 	@Column(nullable = true)
     @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
+	@JsonIgnore
     //@JsonProperty(access = JsonProperty.Access.AUTO)
     private Set<Visit> visit = new HashSet<Visit>();
-
-	@OneToOne(fetch = FetchType.EAGER)
+ 
+	@OneToOne
     @JoinColumn(name = "plant_coordinate_id")
+	//@JsonIgnore
     private PlantCoordinates plantZone;
 
 	public Set<Visit> getVisit() {

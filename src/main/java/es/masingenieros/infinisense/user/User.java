@@ -1,15 +1,14 @@
 package es.masingenieros.infinisense.user;
 
-import java.io.InputStream;
-import java.sql.Blob;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import es.masingenieros.infinisense.lib.DomainObject;
 import es.masingenieros.infinisense.visit.Visit;
@@ -24,6 +23,7 @@ public class User extends DomainObject{
 
 	private String username;
 
+	@JsonIgnore
 	private String password;
 
 	private String firstname;
@@ -39,7 +39,7 @@ public class User extends DomainObject{
 	@Column(nullable = false, unique = true)
     private String dni;
     
-	@Column(nullable = false)
+	@Column(nullable = true)
     private String company;
 		
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

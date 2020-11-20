@@ -259,6 +259,7 @@ public class PlantController {
 		plantCoordinates.setName(values.get("name"));
 		plantCoordinates.setVirtualZoneType(values.get("virtualZoneType"));
 		plantCoordinates.setSensorType(values.get("sensorType"));
+		plantCoordinates.setEpis(values.get("epis"));
 		return plantCoordinates;
 	}
 	

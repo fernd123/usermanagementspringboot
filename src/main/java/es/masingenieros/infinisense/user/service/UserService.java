@@ -17,10 +17,12 @@ import es.masingenieros.infinisense.user.UserSignature;
 public interface UserService {
 
 	User save(User user);
+	User update(String uuid, User user);
 	void deleteUsersByUuid(List<String> userUuids);
 	Iterable<User> findAll();
 	Optional<User> getUserByDni(String dni);
 	UserSignature saveSignature(UserSignature usignature);
 	Optional<User> getUserByUuid(String uuid);
 	UserSignature getSignatureByUser(User user);
+	Iterable<User> getInternalUsers(String tenantId);
 }

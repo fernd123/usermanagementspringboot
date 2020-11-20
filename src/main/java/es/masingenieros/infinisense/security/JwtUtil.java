@@ -15,7 +15,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JwtUtil {
 
-	private String SECRET_KEY = "secret";
+	private String SECRET_KEY = "Of'ieOf7K6)x,Qr";
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -36,14 +36,15 @@ public class JwtUtil {
 	private Boolean isTokenExpired(String token) {
 		return extractExpiration(token).before(new Date());
 	}
-	public String generateToken(UserDetails userDetails) {
+	public String generateToken(CustomUserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
-		return createToken(claims, userDetails.getUsername());
+		return createToken(claims, userDetails);
 	}
-	private String createToken(Map<String, Object> claims, String subject) {
+	private String createToken(Map<String, Object> claims, CustomUserDetails userDetails) {
 		return Jwts.builder().setClaims(claims)
-				.setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-				//.claim("UserType", "Purple")// Custom data
+				.setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
+				.claim("authorities", userDetails.getAuthorities())// Custom data
+				.claim("uuid", userDetails.getUuid())// Custom data
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
 				.signWith(SignatureAlgorithm.HS384, SECRET_KEY).compact();
 	}

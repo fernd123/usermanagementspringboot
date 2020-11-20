@@ -24,6 +24,8 @@ public class PlantCoordinates extends DomainObject{
 	
 	private String sensorId;
 	
+	private String epis;
+	
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "plant_id")
 	private Plant plant;
@@ -74,5 +76,13 @@ public class PlantCoordinates extends DomainObject{
 
 	public void setPlant(Plant plant) {
 		this.plant = plant;
+	}
+
+	public String getEpis() {
+		return epis;
+	}
+
+	public void setEpis(String epis) {
+		this.epis = epis;
 	}
 }

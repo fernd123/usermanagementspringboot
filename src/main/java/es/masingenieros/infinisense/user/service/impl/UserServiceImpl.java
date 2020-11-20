@@ -38,8 +38,30 @@ public class UserServiceImpl implements UserService {
 		if(user.getPassword() != null) {
 			user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 		}
+		if(user.getCompany() == null) {
+			user.setCompany("");
+		}
 		user.setActive(true);
 		return userRepository.save(user);
+	}
+	
+	@Override
+	public User update(String uuid, User user) {
+		Optional<User> userOpt = userRepository.findById(uuid);
+		User userInDb = userOpt.orElse(null);
+		userInDb.setUsername(user.getUsername());
+		userInDb.setFirstname(user.getFirstname());
+		userInDb.setLastName(user.getLastname());
+		userInDb.setActive(user.isActive());
+		userInDb.setRoles(user.getRoles());
+		userInDb.setEmail(user.getEmail());
+		userInDb.setDni(user.getDni());
+		userInDb.setCompany("");
+		if(user.getPassword() != null) {
+			userInDb.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		}
+		
+		return userRepository.save(userInDb);
 	}
 
 	@Override
@@ -66,6 +88,9 @@ public class UserServiceImpl implements UserService {
 	public UserSignature getSignatureByUser(User user) {
 		return userSignatureRepository.findByUser(user);
 	}
-	
-	
+
+	@Override
+	public Iterable<User> getInternalUsers(String tenantId) {
+		return userRepository.findByInternalUsers(tenantId);
+	}
 }

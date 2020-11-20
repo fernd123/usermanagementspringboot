@@ -72,6 +72,18 @@ public class ReasonController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
+	
+	@RequestMapping(value="/{uuid}/zone", method=RequestMethod.GET)
+	public ResponseEntity<?> getZoneReasonByUuid(@PathVariable(value = "uuid") String uuid) {
+		Optional<Reason> opt = reasonService.findReasonByUuid(uuid);
+		PlantCoordinates plantcoords = opt.isPresent() ? opt.get().getPlantZone() : null;
+		
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(plantcoords);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
 
 	@GetMapping
 	public ResponseEntity<?> getAllReasons() {

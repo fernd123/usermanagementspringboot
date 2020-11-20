@@ -1,14 +1,14 @@
 package es.masingenieros.infinisense.user.repository;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import es.masingenieros.infinisense.user.User;
 
 /* Capa para persistir la información */
-public interface UserRepository extends CrudRepository<User, String> {
+public interface UserRepository extends PagingAndSortingRepository<User, String> {
 
 	Optional<User> findByUsername(String userName);
 	
@@ -16,4 +16,7 @@ public interface UserRepository extends CrudRepository<User, String> {
 	String getUserPassword(String uuid);
 
 	Optional<User> findByDni(String dni);
+
+	@Query(value = "select u from User u where lower(u.roles) NOT LIKE '%visitor%'") 
+	Iterable<User> findByInternalUsers(String tenantId);
 }

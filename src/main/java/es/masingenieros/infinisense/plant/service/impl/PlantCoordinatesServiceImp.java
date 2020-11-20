@@ -58,7 +58,8 @@ public class PlantCoordinatesServiceImp implements PlantCoordinatesService{
 		plantInDB.setSensorId(plantCoordinates.getSensorId());
 		plantInDB.setSensorType(plantCoordinates.getSensorType());
 		plantInDB.setVirtualZoneType(plantCoordinates.getVirtualZoneType());
-		
+		plantInDB.setEpis(plantCoordinates.getEpis());
+
 		//convert java object to JSON format
 	     JSONObject convertedObject = new JSONObject(plantInDB.getCoordinates());
 		convertedObject.put("idCoordenate", plantInDB.getUuid());

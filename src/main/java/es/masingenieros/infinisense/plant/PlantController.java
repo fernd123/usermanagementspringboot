@@ -29,6 +29,8 @@ import es.masingenieros.infinisense.plant.repository.PlantCoordinatesRepository;
 import es.masingenieros.infinisense.plant.repository.PlantPlaneRepository;
 import es.masingenieros.infinisense.plant.service.PlantService;
 import es.masingenieros.infinisense.plant.service.coordinates.PlantCoordinatesService;
+import es.masingenieros.infinisense.sensor.SensorType;
+import es.masingenieros.infinisense.sensor.service.SensorTypeService;
 
 @RestController
 @RequestMapping("/api/plant")
@@ -36,15 +38,18 @@ public class PlantController {
 
 	@Autowired 
 	PlantService plantService;
-	
+
 	@Autowired 
 	PlantCoordinatesService plantCoordsService;
 
 	@Autowired
 	PlantPlaneRepository plantPlaneRepository;
-	
+
 	@Autowired
 	PlantCoordinatesRepository plantCoordsRepository;
+
+	@Autowired
+	SensorTypeService sensorTypeService;
 
 	@Autowired
 	private StorageService storageService;
@@ -82,7 +87,7 @@ public class PlantController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value="/{uuid}", method=RequestMethod.GET)
 	public ResponseEntity<?> getPlant(@PathVariable(value = "uuid") String uuid) {
 		try {
@@ -101,7 +106,7 @@ public class PlantController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value="/{uuid}/planes", method=RequestMethod.GET)
 	public ResponseEntity<?> getPlanePlant(@PathVariable(value = "uuid") String uuid) {
 		try {
@@ -141,7 +146,7 @@ public class PlantController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value="/{plantUuid}/upload/{uuid}", method=RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> updatePlantPlane(@PathVariable(value = "plantUuid") String plantUuid, @PathVariable(value = "uuid") String uuid,
 			@RequestParam("file") MultipartFile file) {
@@ -158,7 +163,7 @@ public class PlantController {
 
 			Optional<PlantPlane> plantPlaneOpt = this.plantPlaneRepository.findById(uuid);
 			PlantPlane plantPlaneInDb = plantPlaneOpt.get();
-			
+
 			plantPlaneInDb.setPlant(plant);
 			plantPlaneInDb.setPath(uri);
 			plantPlaneInDb.setName(name);
@@ -180,11 +185,11 @@ public class PlantController {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.CONTENT_DISPOSITION,
 					"attachment; filename=" + resource.getFilename());
-			
+
 			FileNameMap fileNameMap = URLConnection.getFileNameMap();
 			headers.add(HttpHeaders.CONTENT_TYPE,
 					fileNameMap.getContentTypeFor(resource.getFile().getName()));
-			
+
 			return ResponseEntity.ok()
 					.headers(headers)
 					.body(resource);
@@ -192,13 +197,13 @@ public class PlantController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
+
 	/** PLANT COORDINATES **/
 	@RequestMapping(value="/{uuid}/coordinates", method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> savePlantCoordinates(@PathVariable(value = "uuid") String plantUuid, @RequestParam Map<String, String> values) {
-		
+
 		PlantCoordinates plantCoordinates = createPlantCoordinates(values);
-		
+
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(plantCoordsService.save(plantUuid, plantCoordinates));
@@ -206,12 +211,12 @@ public class PlantController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value="/{plantUuid}/coordinates/{uuid}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> updatePlantCoordinates(@PathVariable(value = "plantUuid") String plantUuid, @PathVariable(value = "uuid") String uuid, @RequestParam Map<String, String> values) {
-		
+
 		PlantCoordinates plantCoordinates = createPlantCoordinates(values);
-		
+
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(plantCoordsService.update(uuid, plantCoordinates));
@@ -219,7 +224,7 @@ public class PlantController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value="/{plantUuid}/coordinates/{uuid}", method=RequestMethod.DELETE)
 	public ResponseEntity<?> deletePlantCoordinate(@PathVariable(value = "uuid") String uuid){
 		try {
@@ -231,7 +236,7 @@ public class PlantController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value="/{plantUuid}/coordinates/{uuid}", method=RequestMethod.GET)
 	public ResponseEntity<?> getPlantCoordinatesByUuid(@PathVariable(value = "plantUuid") String plantUuid, @PathVariable(value = "uuid") String uuid) {
 		try {
@@ -241,7 +246,7 @@ public class PlantController {
 		}
 	}
 
-	
+
 	@RequestMapping(value="/{uuid}/coordinates", method=RequestMethod.GET)
 	public ResponseEntity<?> getPlantCoordinates(@PathVariable(value = "uuid") String uuid) {
 		try {
@@ -258,12 +263,18 @@ public class PlantController {
 		plantCoordinates.setCoordinates(values.get("coordinates"));
 		plantCoordinates.setName(values.get("name"));
 		plantCoordinates.setVirtualZoneType(values.get("virtualZoneType"));
-		plantCoordinates.setSensorType(values.get("sensorType"));
 		plantCoordinates.setEpis(values.get("epis"));
+		plantCoordinates.setStatus(values.get("status"));
+
+		Optional<SensorType> sensorTypeOpt = sensorTypeService.findSensorTypeByUuid(values.get("sensorType"));
+		SensorType sensor = sensorTypeOpt.isPresent() ? sensorTypeOpt.get() : null;
+		if(sensor != null)
+			plantCoordinates.setSensorType(sensor);
+
 		return plantCoordinates;
 	}
-	
-	
+
+
 	private Plant createPlant(Map<String, String> values) {
 		Plant plant = new Plant();
 		plant.setName(values.get("name"));

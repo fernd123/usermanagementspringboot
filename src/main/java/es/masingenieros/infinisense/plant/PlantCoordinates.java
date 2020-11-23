@@ -7,6 +7,7 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 import es.masingenieros.infinisense.lib.DomainObject;
+import es.masingenieros.infinisense.sensor.SensorType;
 
 @Entity
 public class PlantCoordinates extends DomainObject{
@@ -20,12 +21,16 @@ public class PlantCoordinates extends DomainObject{
 	
 	private String virtualZoneType; // Sensor, zona virtual
 	
-	private String sensorType;
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "sensor_type_id")
+	private SensorType sensorType;
 	
 	private String sensorId;
 	
 	private String epis;
 	
+	private String status;
+
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "plant_id")
 	private Plant plant;
@@ -54,11 +59,11 @@ public class PlantCoordinates extends DomainObject{
 		this.virtualZoneType = virtualZoneType;
 	}
 
-	public String getSensorType() {
+	public SensorType getSensorType() {
 		return sensorType;
 	}
 
-	public void setSensorType(String sensorType) {
+	public void setSensorType(SensorType sensorType) {
 		this.sensorType = sensorType;
 	}
 
@@ -84,5 +89,13 @@ public class PlantCoordinates extends DomainObject{
 
 	public void setEpis(String epis) {
 		this.epis = epis;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

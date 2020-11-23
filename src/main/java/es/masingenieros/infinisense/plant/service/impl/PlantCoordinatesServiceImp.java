@@ -3,13 +3,9 @@ package es.masingenieros.infinisense.plant.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import es.masingenieros.infinisense.plant.Plant;
 import es.masingenieros.infinisense.plant.PlantCoordinates;
@@ -52,13 +48,16 @@ public class PlantCoordinatesServiceImp implements PlantCoordinatesService{
 	@Override
 	public PlantCoordinates update(String uuid, PlantCoordinates plantCoordinates) {
 		Optional<PlantCoordinates> plantOpt = plantCoordinatesRepository.findById(uuid);
-		PlantCoordinates plantInDB = plantOpt.get();		
-		plantInDB.setCoordinates(plantCoordinates.getCoordinates());
+		PlantCoordinates plantInDB = plantOpt.get();
+		if(plantCoordinates.getCoordinates() != null && !plantCoordinates.getCoordinates().equals("null")) {
+			plantInDB.setCoordinates(plantCoordinates.getCoordinates());			
+		}
 		plantInDB.setName(plantCoordinates.getName());
 		plantInDB.setSensorId(plantCoordinates.getSensorId());
 		plantInDB.setSensorType(plantCoordinates.getSensorType());
 		plantInDB.setVirtualZoneType(plantCoordinates.getVirtualZoneType());
 		plantInDB.setEpis(plantCoordinates.getEpis());
+		plantInDB.setStatus(plantCoordinates.getStatus());
 
 		//convert java object to JSON format
 	     JSONObject convertedObject = new JSONObject(plantInDB.getCoordinates());

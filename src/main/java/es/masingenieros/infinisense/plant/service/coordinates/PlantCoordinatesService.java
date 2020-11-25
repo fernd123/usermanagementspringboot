@@ -13,4 +13,5 @@ public interface PlantCoordinatesService{
 	Optional<PlantCoordinates> findById(String uuid);
 	Iterable<PlantCoordinates> findByPlantUuid(String plantUuid);
 	Optional<PlantCoordinates> findByPlantCoordinatesUuid(String uuid);
+	Iterable<PlantCoordinates> findByPlantUuidAndVirtualZoneType(String uuid, String type);
 }

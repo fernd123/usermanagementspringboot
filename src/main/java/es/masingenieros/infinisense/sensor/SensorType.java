@@ -1,17 +1,9 @@
 package es.masingenieros.infinisense.sensor;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import es.masingenieros.infinisense.lib.DomainObject;
-import es.masingenieros.infinisense.visit.Visit;
 
 @Entity
 public class SensorType extends DomainObject{
@@ -26,6 +18,8 @@ public class SensorType extends DomainObject{
 
 	private String description;
 	
+	private String image;
+
 	private Boolean active;
 
 	public String getName() {
@@ -50,5 +44,13 @@ public class SensorType extends DomainObject{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 }

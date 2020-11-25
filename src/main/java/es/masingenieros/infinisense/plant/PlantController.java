@@ -172,7 +172,6 @@ public class PlantController {
 			FileResponse fr = new FileResponse(name, uri, file.getContentType(), file.getSize());
 			return ResponseEntity.status(HttpStatus.OK).body(fr);
 		} catch (Exception e) {
-
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
@@ -238,7 +237,8 @@ public class PlantController {
 	}
 
 	@RequestMapping(value="/{plantUuid}/coordinates/{uuid}", method=RequestMethod.GET)
-	public ResponseEntity<?> getPlantCoordinatesByUuid(@PathVariable(value = "plantUuid") String plantUuid, @PathVariable(value = "uuid") String uuid) {
+	public ResponseEntity<?> getPlantCoordinatesByUuid(@PathVariable(value = "plantUuid") String plantUuid,
+			@PathVariable(value = "uuid") String uuid) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(plantCoordsService.findByPlantCoordinatesUuid(uuid));
 		} catch (Exception e) {
@@ -248,9 +248,14 @@ public class PlantController {
 
 
 	@RequestMapping(value="/{uuid}/coordinates", method=RequestMethod.GET)
-	public ResponseEntity<?> getPlantCoordinates(@PathVariable(value = "uuid") String uuid) {
+	public ResponseEntity<?> getPlantCoordinates(@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "type") String type) {
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(plantCoordsService.findByPlantUuid(uuid));
+			if(type == null) {
+				return ResponseEntity.status(HttpStatus.OK).body(plantCoordsService.findByPlantUuid(uuid));				
+			}else {
+				return ResponseEntity.status(HttpStatus.OK).body(plantCoordsService.findByPlantUuidAndVirtualZoneType(uuid, type));				
+			}
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}

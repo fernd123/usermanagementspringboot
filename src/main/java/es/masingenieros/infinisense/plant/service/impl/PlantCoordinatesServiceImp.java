@@ -97,4 +97,9 @@ public class PlantCoordinatesServiceImp implements PlantCoordinatesService{
 	public Optional<PlantCoordinates> findByPlantCoordinatesUuid(String uuid) {
 		return plantCoordinatesRepository.findById(uuid);
 	}
+
+	@Override
+	public Iterable<PlantCoordinates> findByPlantUuidAndVirtualZoneType(String uuid, String type) {
+		return plantCoordinatesRepository.findByPlantUuidAndVirtualZoneType(uuid, type);
+	}
 }

@@ -93,4 +93,9 @@ public class UserServiceImpl implements UserService {
 	public Iterable<User> getInternalUsers(String tenantId) {
 		return userRepository.findByInternalUsers(tenantId);
 	}
+
+	@Override
+	public Iterable<User> getExternalUsers(String tenantId) {
+		return userRepository.findByExternalUsers(tenantId);
+	}
 }

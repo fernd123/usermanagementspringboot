@@ -1,4 +1,4 @@
-package es.masingenieros.infinisense.plant.service.impl;
+package es.masingenieros.infinisense.plant.service.coordinates.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,6 +64,7 @@ public class PlantCoordinatesServiceImp implements PlantCoordinatesService{
 		convertedObject.put("idCoordenate", plantInDB.getUuid());
 		convertedObject.put("type", plantInDB.getVirtualZoneType());
 		convertedObject.put("title", plantInDB.getName());
+		//convertedObject.put("img", plantCoordinates.getSensorType().getImage());
 
 		plantInDB.setCoordinates(convertedObject.toString());
 		plantInDB = plantCoordinatesRepository.save(plantInDB);

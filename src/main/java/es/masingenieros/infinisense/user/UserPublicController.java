@@ -45,6 +45,12 @@ public class UserPublicController {
 		String tenantId = values.get("tenantId");
 		return ResponseEntity.ok(userService.getInternalUsers(tenantId));
 	}
+	
+	@RequestMapping(value="/external", method=RequestMethod.GET, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ResponseEntity<?> getExternalUsers(@RequestParam Map<String, String> values) {
+		String tenantId = values.get("tenantId");
+		return ResponseEntity.ok(userService.getExternalUsers(tenantId));
+	}
 
 	@RequestMapping(value="/{uuid}/signature", method=RequestMethod.GET, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public @ResponseBody Iterable<User> getAllUsers() {

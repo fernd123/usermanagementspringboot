@@ -1,4 +1,4 @@
-package es.masingenieros.infinisense.plant.service.coordinates.impl;
+package es.masingenieros.infinisense.plant.service.impl;
 
 import java.util.List;
 import java.util.Optional;

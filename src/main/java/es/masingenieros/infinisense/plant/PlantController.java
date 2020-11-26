@@ -78,10 +78,12 @@ public class PlantController {
 		}
 	}
 
-	@DeleteMapping
-	public ResponseEntity<?> deletePlant(@RequestParam List<String> reasonIds){
+	@RequestMapping(value="/{uuid}", method=RequestMethod.DELETE)
+	public ResponseEntity<?> deletePlant(@PathVariable(value = "uuid") String uuid){
+		List<String> plantsUuids = new ArrayList<String>();
+		plantsUuids.add(uuid);
 		try {
-			plantService.deletePlantById(reasonIds);
+			plantService.deletePlantById(plantsUuids);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

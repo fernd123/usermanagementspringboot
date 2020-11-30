@@ -1,15 +1,18 @@
 package es.masingenieros.infinisense.plant;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import es.masingenieros.infinisense.lib.DomainObject;
 import es.masingenieros.infinisense.sensor.SensorType;
 
 @Entity
+@Table(name = "plant_coordinates")
 public class PlantCoordinates extends DomainObject{
 
 	private static final long serialVersionUID = 1L;
@@ -19,12 +22,14 @@ public class PlantCoordinates extends DomainObject{
 	@Lob
 	private String coordinates;
 	
+	@Column(name="virtual_zone_type")
 	private String virtualZoneType; // Sensor, zona virtual
 	
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sensor_type_id")
 	private SensorType sensorType;
 	
+	@Column(name="sensor_id")
 	private String sensorId;
 	
 	private String epis;

@@ -31,8 +31,8 @@ public class VisitServiceImpl implements VisitService{
 	}
 
 	@Override
-	public Visit update(Visit visit) {
-		Optional<Visit> visitOpt = visitRepository.findById(visit.getUuid());
+	public Visit update(String uuid) {
+		Optional<Visit> visitOpt = visitRepository.findById(uuid);
 		Visit visitInDb = visitOpt.isPresent() ? visitOpt.get() : null;
 		if(visitInDb == null) {
 			return null;

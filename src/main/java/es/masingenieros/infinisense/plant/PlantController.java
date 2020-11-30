@@ -114,6 +114,7 @@ public class PlantController {
 		try {
 			Optional<Plant> plantOpt = plantService.findById(uuid);
 			Plant plant = plantOpt.get();
+			Optional<PlantPlane> a = plantPlaneRepository.findByPlant(plant);
 			return ResponseEntity.status(HttpStatus.OK).body(plantPlaneRepository.findByPlant(plant));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -4,36 +4,53 @@ plugins {
 	id 'java'
 }
 
-group = 'es.masingenieros'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '8'
+allprojects {
 
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-	implementation 'com.google.code.gson:gson:2.8.6'
+	group = 'es.masingenieros'
+	version = '0.0.1-SNAPSHOT'
+	sourceCompatibility = '8'
 	
-	
-	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'mysql:mysql-connector-java'
-	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	repositories {
+		mavenCentral()
 	}
-	testImplementation 'org.springframework.security:spring-security-test'
-	compile group: 'org.json', name: 'json', version: '20200518'
 	
-}
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
 
-test {
-	useJUnitPlatform()
+	apply plugin: 'java'
+    apply plugin: 'eclipse'
+	apply plugin: 'io.spring.dependency-management'
+	
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-actuator'
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-security'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+		implementation 'com.google.code.gson:gson:2.8.6'
+		implementation('io.jsonwebtoken:jjwt:0.2')
+		implementation('org.slf4j:slf4j-api')
+		implementation 'org.json:json:20200518'
+
+		developmentOnly 'org.springframework.boot:spring-boot-devtools'
+		runtimeOnly 'com.h2database:h2'
+		runtimeOnly 'mysql:mysql-connector-java'
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
+		testImplementation 'org.springframework.security:spring-security-test'
+		
+	}
+	
+	task fatJar(type:Jar) {
+		manifest {
+			attributes 'Main-Class': 'es.masingenieros.infinisense.InfinisenseApplication',
+			'Implementation-Title': 'Gradle Fat Jar Demo',
+			'Implementation-Version': '1.0'
+		}
+		from {
+			configurations.compile.collect{it.isDirectory() ? it : zipTree(it)}
+		}
+		with jar
+	}
 }

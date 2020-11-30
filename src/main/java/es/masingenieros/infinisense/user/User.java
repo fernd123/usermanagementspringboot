@@ -23,7 +23,6 @@ public class User extends DomainObject{
 
 	private String username;
 
-	@JsonIgnore
 	private String password;
 
 	private String firstname;

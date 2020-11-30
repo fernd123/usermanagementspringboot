@@ -2,6 +2,7 @@ package es.masingenieros.infinisense.visit;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -35,7 +36,10 @@ public class Visit extends DomainObject{
     //@JsonProperty(access = JsonProperty.Access.AUTO)
 	private User user;
 	
+	@Column(name="start_date")
 	private Timestamp startDate;
+
+	@Column(name="end_date")
 	private Timestamp endDate;
 	
 	public Reason getReason() {

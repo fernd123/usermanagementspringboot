@@ -2,10 +2,12 @@ package es.masingenieros.infinisense.sensor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import es.masingenieros.infinisense.lib.DomainObject;
 
 @Entity
+@Table(name = "sensor_type")
 public class SensorType extends DomainObject{
 
 	/**

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -93,12 +92,13 @@ public class VisitController {
 		}
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT)
+	@RequestMapping(method=RequestMethod.PUT, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@Transactional(rollbackOn = Exception.class)
-	public ResponseEntity<?> updateVisit(@RequestBody Visit visit) throws Exception{
+	public ResponseEntity<?> updateVisit(@RequestParam Map<String, String> values) throws Exception{
+		String uuid = values.get("uuid");
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED)
-					.body(visitService.update(visit));
+					.body(visitService.update(uuid));
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
@@ -106,7 +106,6 @@ public class VisitController {
 
 	@RequestMapping(method=RequestMethod.GET, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> getAllVisits(@RequestParam Map<String, String> values) {
-		String tenantId = values.get("tenantId");
 		String filter = values.get("filter");
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(visitService.findAll(filter));

@@ -85,8 +85,4 @@ public class Reason extends DomainObject implements Serializable{
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	
-	
-	
 }

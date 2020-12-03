@@ -6,6 +6,7 @@ CREATE TABLE schema_name_replace.`user_signature` (
   `modified_date` bigint DEFAULT NULL,
   `signature` longblob,
   `user_id` varchar(255) DEFAULT NULL,
+   `path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`uuid`),
   KEY `FKhnedhai6q7xk4117vee6gjv3l` (`user_id`),
   CONSTRAINT `FKhnedhai6q7xk4117vee6gjv3l` FOREIGN KEY (`user_id`) REFERENCES schema_name_replace.`user` (`uuid`)

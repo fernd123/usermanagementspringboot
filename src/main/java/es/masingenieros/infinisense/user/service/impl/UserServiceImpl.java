@@ -90,12 +90,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Iterable<User> getInternalUsers(String tenantId) {
-		return userRepository.findByInternalUsers(tenantId);
+	public Iterable<User> getInternalUsers() {
+		return userRepository.findByInternalUsers();
 	}
 
 	@Override
-	public Iterable<User> getExternalUsers(String tenantId) {
-		return userRepository.findByExternalUsers(tenantId);
+	public Iterable<User> getExternalUsers() {
+		return userRepository.findByExternalUsers();
 	}
 }

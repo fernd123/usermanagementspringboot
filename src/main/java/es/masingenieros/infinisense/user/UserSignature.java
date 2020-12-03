@@ -25,6 +25,8 @@ public class UserSignature extends DomainObject{
 	@Lob
 	private Blob signature;
 	
+	private String path;
+	
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonProperty(access = JsonProperty.Access.AUTO)
@@ -44,5 +46,13 @@ public class UserSignature extends DomainObject{
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getPath() {
+		return path;
 	}
 }

@@ -1,6 +1,12 @@
 package es.masingenieros.infinisense.visit;
 
-import java.sql.Blob;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
@@ -8,6 +14,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import javax.xml.bind.DatatypeConverter;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.masingenieros.infinisense.filestorage.StorageService;
+import es.masingenieros.infinisense.mulitenancy.TenantContext;
 import es.masingenieros.infinisense.reason.Reason;
 import es.masingenieros.infinisense.reason.service.ReasonService;
 import es.masingenieros.infinisense.user.User;
@@ -42,6 +51,11 @@ public class VisitController {
 	@Autowired
 	EntityManager em;
 
+	@Autowired
+	private StorageService storageService;
+	
+	private final String USERSIGNATURE = "usersignature";
+	
 	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@Transactional(rollbackOn = Exception.class)
 	public ResponseEntity<?> createVisit(@RequestParam Map<String, String> values) throws Exception{
@@ -64,11 +78,9 @@ public class VisitController {
 				user.setActive(true);
 				user = userService.save(user);
 				
-				/* Signature user */
-				String signatureStr = userJsonObj.getString("signature");
-	            Blob b = new javax.sql.rowset.serial.SerialBlob(signatureStr.getBytes());
 				UserSignature usignature = new UserSignature();
-				usignature.setSignature(b);
+				String path = convertBaseIntoImage(userJsonObj.getString(("signature")), user.getDni());
+				usignature.setPath(path);
 				usignature.setUser(user);
 				userService.saveSignature(usignature);
 			}
@@ -90,6 +102,40 @@ public class VisitController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
+	}
+	
+	private String convertBaseIntoImage(String base64String, String userUuid) {
+        String[] strings = base64String.split(",");
+        String extension;
+        switch (strings[0]) {//check image's extension
+            case "data:image/jpeg;base64":
+                extension = "jpeg";
+                break;
+            case "data:image/png;base64":
+                extension = "png";
+                break;
+            default://should write cases for more images types
+                extension = "jpg";
+                break;
+        }
+        //convert base64 string to binary data
+        byte[] data = DatatypeConverter.parseBase64Binary(strings[1]);
+        String tenant = TenantContext.getCurrentTenant();
+        Path rootLocation = Paths.get(this.storageService.getPathOriginal()+"/"+tenant+"/"+USERSIGNATURE);
+    	
+    	File directory = new File(rootLocation.toString());
+        if (!directory.exists()){
+            directory.mkdirs();
+        }
+        String path = rootLocation.toString() +"/"+ userUuid + "." + extension;
+        File file = new File(path);
+        
+        try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+            outputStream.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return userUuid + "." + extension;
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)

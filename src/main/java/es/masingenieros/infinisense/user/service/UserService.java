@@ -24,7 +24,7 @@ public interface UserService {
 	UserSignature saveSignature(UserSignature usignature);
 	Optional<User> getUserByUuid(String uuid);
 	UserSignature getSignatureByUser(User user);
-	Iterable<User> getInternalUsers(String tenantId);
-	Iterable<User> getExternalUsers(String tenantId);
+	Iterable<User> getInternalUsers();
+	Iterable<User> getExternalUsers();
 
 }

@@ -26,7 +26,11 @@ public class FileSystemStorageService implements StorageService {
     private Path rootLocation;
     private final String pathOriginal;
 
-    @Autowired
+    public String getPathOriginal() {
+		return pathOriginal;
+	}
+
+	@Autowired
     public FileSystemStorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
         this.pathOriginal = this.rootLocation.toString();
@@ -105,6 +109,7 @@ public class FileSystemStorageService implements StorageService {
             Path file = load(filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
+            	this.rootLocation = Paths.get(this.pathOriginal);
                 return resource;
             }
             else {

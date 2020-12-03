@@ -18,8 +18,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, String>
 	Optional<User> findByDni(String dni);
 
 	@Query(value = "select u from User u where lower(u.roles) NOT LIKE '%visitor%'") 
-	Iterable<User> findByInternalUsers(String tenantId);
+	Iterable<User> findByInternalUsers();
 
 	@Query(value = "select u from User u where lower(u.roles) LIKE '%visitor%'") 
-	Iterable<User> findByExternalUsers(String tenantId);
+	Iterable<User> findByExternalUsers();
 }

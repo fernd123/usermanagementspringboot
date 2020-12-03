@@ -97,8 +97,8 @@ public class CompanyController {
 		company.setName(values.get("name"));
 		company.setDescription(values.get("description"));
 		company.setActive(Boolean.valueOf(values.get("active")));
-		company.setAlira(Boolean.valueOf(values.get("alira")));
-		company.setInfinisense(Boolean.valueOf(values.get("infinisense")));
+		company.setAliro(Boolean.valueOf(values.get("aliro")));
+		company.setErgo(Boolean.valueOf(values.get("ergo")));
 		return company;
 	}
 	

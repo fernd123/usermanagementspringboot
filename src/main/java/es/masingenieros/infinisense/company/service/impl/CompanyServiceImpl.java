@@ -280,8 +280,8 @@ public class CompanyServiceImpl implements CompanyService{
 		Company epiInDb = optReason.get();
 		epiInDb.setName(company.getName());
 		epiInDb.setDescription(company.getDescription());
-		epiInDb.setAlira(company.getAlira());
-		epiInDb.setInfinisense(company.getInfinisense());
+		epiInDb.setAliro(company.getAliro());
+		epiInDb.setErgo(company.getErgo());
 		epiInDb.setActive(company.getActive());
 
 		return companyRepository.save(epiInDb);

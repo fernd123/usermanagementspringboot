@@ -6,8 +6,8 @@ CREATE TABLE schema_name_replace.`company` (
   `modified_date` bigint DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `alira` bit(1) DEFAULT NULL,
-  `infinisense` bit(1) DEFAULT NULL,
+  `aliro` bit(1) DEFAULT NULL,
+  `ergo` bit(1) DEFAULT NULL,
   `active` bit(1) DEFAULT NULL,
   `user_id` varchar(255) DEFAULT NULL,
 

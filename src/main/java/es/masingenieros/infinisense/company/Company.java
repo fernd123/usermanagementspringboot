@@ -27,9 +27,9 @@ public class Company extends DomainObject implements Serializable{
 
 	private String description;
 	
-	private Boolean alira;
+	private Boolean aliro;
 
-	private Boolean infinisense;
+	private Boolean ergo;
 
 	private Boolean active;
 	
@@ -69,19 +69,19 @@ public class Company extends DomainObject implements Serializable{
 		this.active = active;
 	}
 
-	public Boolean getAlira() {
-		return alira;
+	public Boolean getAliro() {
+		return aliro;
 	}
 
-	public void setAlira(Boolean alira) {
-		this.alira = alira;
+	public void setAliro(Boolean aliro) {
+		this.aliro = aliro;
 	}
 
-	public Boolean getInfinisense() {
-		return infinisense;
+	public Boolean getErgo() {
+		return ergo;
 	}
 
-	public void setInfinisense(Boolean infinisense) {
-		this.infinisense = infinisense;
+	public void setErgo(Boolean ergo) {
+		this.ergo = ergo;
 	}
 }

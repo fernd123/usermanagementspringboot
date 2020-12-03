@@ -31,6 +31,9 @@ allprojects {
 		implementation('io.jsonwebtoken:jjwt:0.2')
 		implementation('org.slf4j:slf4j-api')
 		implementation 'org.json:json:20200518'
+		//compile('org.liquibase:liquibase-core:4.0.0')
+		compile group: 'commons-io', name: 'commons-io', version: '2.6'
+		
 
 		developmentOnly 'org.springframework.boot:spring-boot-devtools'
 		runtimeOnly 'com.h2database:h2'

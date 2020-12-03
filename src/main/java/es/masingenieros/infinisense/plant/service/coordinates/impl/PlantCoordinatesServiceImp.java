@@ -103,4 +103,9 @@ public class PlantCoordinatesServiceImp implements PlantCoordinatesService{
 	public Iterable<PlantCoordinates> findByPlantUuidAndVirtualZoneType(String uuid, String type) {
 		return plantCoordinatesRepository.findByPlantUuidAndVirtualZoneType(uuid, type);
 	}
+
+	@Override
+	public void deletePlantCoordinateByPlant(Plant plant) {
+		plantCoordinatesRepository.deleteByPlant(plant);		
+	}
 }

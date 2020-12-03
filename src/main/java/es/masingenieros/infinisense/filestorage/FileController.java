@@ -45,7 +45,7 @@ public class FileController {
     @ResponseBody
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
 
-        Resource resource = storageService.loadAsResource(filename);
+        Resource resource = storageService.loadAsResource(filename, "", "");
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
@@ -56,7 +56,7 @@ public class FileController {
     @PostMapping("/upload-file")
     @ResponseBody
     public FileResponse uploadFile(@RequestParam("file") MultipartFile file) {
-        String name = storageService.store(file);
+        String name = storageService.store(file, "", ""); //TODO
 
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")

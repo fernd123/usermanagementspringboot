@@ -24,12 +24,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.masingenieros.infinisense.filestorage.FileResponse;
 import es.masingenieros.infinisense.filestorage.StorageService;
+import es.masingenieros.infinisense.mulitenancy.TenantContext;
 import es.masingenieros.infinisense.sensor.service.SensorTypeService;
 
 @RestController
 @RequestMapping("/api/sensortype")
 public class SensorTypeController {
 	
+	private static final String SENSORTYPE = "sensortype";
+
 	@Autowired 
 	SensorTypeService sensorTypeService;
 
@@ -64,7 +67,7 @@ public class SensorTypeController {
 			@RequestParam("file") MultipartFile file) {
 		try {
 
-			String name = storageService.store(file);
+			String name = storageService.store(file, TenantContext.getCurrentTenant(), SENSORTYPE);
 
 			String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
 					.path("/download/")
@@ -87,7 +90,7 @@ public class SensorTypeController {
 	@RequestMapping(value="/download/{filename}", method=RequestMethod.GET)
 	public ResponseEntity<?> downloadFile(@PathVariable(value = "filename") String filename) {
 		try {
-			Resource resource = storageService.loadAsResource(filename);
+			Resource resource = storageService.loadAsResource(filename, TenantContext.getCurrentTenant(), SENSORTYPE);
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.CONTENT_DISPOSITION,

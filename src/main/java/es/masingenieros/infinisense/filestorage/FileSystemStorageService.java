@@ -9,6 +9,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -21,11 +23,13 @@ import java.util.stream.Stream;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private final Path rootLocation;
+    private Path rootLocation;
+    private final String pathOriginal;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
+        this.pathOriginal = this.rootLocation.toString();
     }
 
     @Override
@@ -39,7 +43,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public String store(MultipartFile file) {
+    public String store(MultipartFile file, String tenant, String entityName) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
@@ -52,11 +56,24 @@ public class FileSystemStorageService implements StorageService {
                                 + filename);
             }
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, this.rootLocation.resolve(filename),
+            	
+            	this.rootLocation = Paths.get(this.rootLocation.toString()+"/"+tenant+"/"+entityName);
+            	
+            	File directory = new File(this.rootLocation.toString());
+                if (!directory.exists()){
+                    directory.mkdirs();
+                    // If you require it to make the entire directory path including parents,
+                    // use directory.mkdirs(); here instead.
+                }
+                
+            	Files.copy(inputStream, this.rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
+            	this.rootLocation = Paths.get(this.pathOriginal);
+
             }
         }
         catch (IOException e) {
+        	this.rootLocation = Paths.get(this.pathOriginal);
             throw new StorageException("Failed to store file " + filename, e);
         }
 
@@ -82,19 +99,22 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Resource loadAsResource(String filename) {
+    public Resource loadAsResource(String filename, String tenant, String entityName) {
         try {
+        	this.rootLocation = Paths.get(this.rootLocation.toString()+"/"+tenant+"/"+entityName);
             Path file = load(filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             }
             else {
+            	this.rootLocation = Paths.get(this.pathOriginal);
                 throw new FileNotFoundException(
                         "Could not read file: " + filename);
             }
         }
         catch (MalformedURLException e) {
+        	this.rootLocation = Paths.get(this.pathOriginal);
             throw new FileNotFoundException("Could not read file: " + filename, e);
         }
     }

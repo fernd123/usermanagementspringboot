@@ -25,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.masingenieros.infinisense.filestorage.FileResponse;
 import es.masingenieros.infinisense.filestorage.StorageService;
+import es.masingenieros.infinisense.mulitenancy.TenantContext;
 import es.masingenieros.infinisense.plant.repository.PlantCoordinatesRepository;
 import es.masingenieros.infinisense.plant.repository.PlantPlaneRepository;
 import es.masingenieros.infinisense.plant.service.PlantService;
@@ -35,6 +36,8 @@ import es.masingenieros.infinisense.sensor.service.SensorTypeService;
 @RestController
 @RequestMapping("/api/plant")
 public class PlantController {
+
+	private static final String PLANTPLANEENTITY = "plantplane";
 
 	@Autowired 
 	PlantService plantService;
@@ -83,6 +86,9 @@ public class PlantController {
 		List<String> plantsUuids = new ArrayList<String>();
 		plantsUuids.add(uuid);
 		try {
+			/*Optional<Plant> plantInDb = plantService.findById(uuid);
+			Plant plant = plantInDb.isPresent() ? plantInDb.get() : null;
+			plantCoordsService.deletePlantCoordinateByPlant(plant);*/
 			plantService.deletePlantById(plantsUuids);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {
@@ -129,7 +135,7 @@ public class PlantController {
 			Plant plant = plantOpt.get();
 
 
-			String name = storageService.store(file);
+			String name = storageService.store(file, TenantContext.getCurrentTenant(), PLANTPLANEENTITY);
 
 			String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
 					.path("/download/")
@@ -157,7 +163,7 @@ public class PlantController {
 			Optional<Plant> plantOpt = plantService.findById(plantUuid);
 			Plant plant = plantOpt.get();
 
-			String name = storageService.store(file);
+			String name = storageService.store(file, TenantContext.getCurrentTenant(), PLANTPLANEENTITY);
 
 			String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
 					.path("/download/")
@@ -182,7 +188,7 @@ public class PlantController {
 	@RequestMapping(value="/planes/download/{filename}", method=RequestMethod.GET)
 	public ResponseEntity<?> downloadFile(@PathVariable(value = "filename") String filename) {
 		try {
-			Resource resource = storageService.loadAsResource(filename);
+			Resource resource = storageService.loadAsResource(filename,TenantContext.getCurrentTenant(), PLANTPLANEENTITY);
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.CONTENT_DISPOSITION,

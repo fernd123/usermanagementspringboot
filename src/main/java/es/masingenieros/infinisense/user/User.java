@@ -8,8 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import es.masingenieros.infinisense.lib.DomainObject;
 import es.masingenieros.infinisense.visit.Visit;
 
@@ -35,7 +33,7 @@ public class User extends DomainObject{
 
 	private String email;
     
-	@Column(nullable = false, unique = true)
+	@Column(nullable = true, unique = true)
     private String dni;
     
 	@Column(nullable = true)

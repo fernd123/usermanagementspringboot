@@ -1,0 +1,20 @@
+CREATE TABLE schema_name_replace.`plant_coordinates` (
+  `uuid` varchar(255) NOT NULL,
+  `created_by` varchar(255) NOT NULL,
+  `created_date` bigint NOT NULL,
+  `modified_by` varchar(255) DEFAULT NULL,
+  `modified_date` bigint DEFAULT NULL,
+  `coordinates` longtext,
+  `epis` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `sensor_id` varchar(255) DEFAULT NULL,
+  `virtual_zone_type` varchar(255) DEFAULT NULL,
+  `plant_id` varchar(255) DEFAULT NULL,
+  `sensor_type_id` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  KEY `FKr98p710soemd68nihiaiyys3t` (`plant_id`),
+  KEY `FK2f42uvdt21vhgafq7p7q9fjs` (`sensor_type_id`),
+  CONSTRAINT `FK2f42uvdt21vhgafq7p7q9fjs` FOREIGN KEY (`sensor_type_id`) REFERENCES schema_name_replace.`sensor_type` (`uuid`),
+  CONSTRAINT `FKr98p710soemd68nihiaiyys3t` FOREIGN KEY (`plant_id`) REFERENCES schema_name_replace.`plant` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

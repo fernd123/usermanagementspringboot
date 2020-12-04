@@ -39,7 +39,7 @@ public class SensorTypeController {
 	@Autowired
 	private StorageService storageService;
 	
-	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	/*@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> saveSensorType(@RequestParam Map<String, String> values) throws Exception{
 		SensorType sensorType = createSensorType(values);
 		try {
@@ -59,7 +59,7 @@ public class SensorTypeController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-	}
+	}*/
 	
 	/* Image management */
 	@RequestMapping(value="/{uuid}/upload", method=RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -108,7 +108,7 @@ public class SensorTypeController {
 		}
 	}
 	
-	@RequestMapping(value="/{uuid}", method=RequestMethod.GET)
+	/*@RequestMapping(value="/{uuid}", method=RequestMethod.GET)
 	public ResponseEntity<?> getSensorByUuid(@PathVariable(value = "uuid") String uuid) throws Exception{
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
@@ -116,9 +116,9 @@ public class SensorTypeController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-	}
+	}*/
 	
-	@RequestMapping(value="/{uuid}", method=RequestMethod.DELETE)
+	/*@RequestMapping(value="/{uuid}", method=RequestMethod.DELETE)
 	public ResponseEntity<?> deleteSensorType(@PathVariable(value = "uuid") String uuid){
 		List<String> sensorTypeIds = new ArrayList<String>();
 		sensorTypeIds.add(uuid);
@@ -147,5 +147,5 @@ public class SensorTypeController {
 		sensorType.setActive(Boolean.valueOf(values.get("active")));
 		
 		return sensorType;
-	}
+	}*/
 }

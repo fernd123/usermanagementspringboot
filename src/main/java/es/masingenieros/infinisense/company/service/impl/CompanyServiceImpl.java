@@ -34,7 +34,6 @@ import es.masingenieros.infinisense.company.service.impl.TenantException.CreateU
 import es.masingenieros.infinisense.company.service.impl.TenantException.QueryTenantSchemaException;
 import es.masingenieros.infinisense.company.service.impl.TenantException.TenantSchemaAlreadyExistsException;
 import es.masingenieros.infinisense.mulitenancy.TenantConnectionProvider;
-import es.masingenieros.infinisense.mulitenancy.TenantContext;
 import es.masingenieros.infinisense.user.User;
 import es.masingenieros.infinisense.user.service.UserService;
 

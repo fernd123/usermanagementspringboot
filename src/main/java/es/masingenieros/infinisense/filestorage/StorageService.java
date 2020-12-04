@@ -22,4 +22,6 @@ public interface StorageService {
 
 	String getPathOriginal();
 
+	void deleteResource(String filename, String tenant, String entityName);
+
 }

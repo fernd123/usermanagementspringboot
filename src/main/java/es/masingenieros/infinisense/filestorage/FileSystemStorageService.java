@@ -123,6 +123,29 @@ public class FileSystemStorageService implements StorageService {
             throw new FileNotFoundException("Could not read file: " + filename, e);
         }
     }
+    
+    @Override
+    public void deleteResource(String filename, String tenant, String entityName) {
+        try {
+        	this.rootLocation = Paths.get(this.rootLocation.toString()+"/"+tenant+"/"+entityName);
+            Path file = load(filename);
+            File fileToDelete = new File(file.toUri().toString());
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                FileSystemUtils.deleteRecursively(rootLocation.toFile());
+                this.rootLocation = Paths.get(this.pathOriginal);
+            }
+            else {
+            	this.rootLocation = Paths.get(this.pathOriginal);
+                throw new FileNotFoundException(
+                        "Could not read file: " + filename);
+            }
+        }
+        catch (MalformedURLException e) {
+        	this.rootLocation = Paths.get(this.pathOriginal);
+            throw new FileNotFoundException("Could not read file: " + filename, e);
+        }
+    }
 
     @Override
     public void deleteAll() {

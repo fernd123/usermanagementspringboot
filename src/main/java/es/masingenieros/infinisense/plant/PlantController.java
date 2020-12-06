@@ -57,63 +57,6 @@ public class PlantController {
 	private StorageService storageService;
 
 
-	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public ResponseEntity<?> savePlant(@RequestParam Map<String, String> values) {
-		Plant plant = createPlant(values);
-		try {
-			return ResponseEntity.status(HttpStatus.CREATED)
-					.body(plantService.save(plant));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-	}
-
-
-	@RequestMapping(value="/{uuid}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public ResponseEntity<?> updatePlant(@PathVariable(value = "uuid") String uuid, @RequestParam Map<String, String> values) {
-		Plant plant = createPlant(values);
-		try {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(plantService.update(uuid, plant));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-	}
-
-	@RequestMapping(value="/{uuid}", method=RequestMethod.DELETE)
-	public ResponseEntity<?> deletePlant(@PathVariable(value = "uuid") String uuid){
-		List<String> plantsUuids = new ArrayList<String>();
-		plantsUuids.add(uuid);
-		try {
-			/*Optional<Plant> plantInDb = plantService.findById(uuid);
-			Plant plant = plantInDb.isPresent() ? plantInDb.get() : null;
-			plantCoordsService.deletePlantCoordinateByPlant(plant);*/
-			plantService.deletePlantById(plantsUuids);
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-	}
-
-	@RequestMapping(value="/{uuid}", method=RequestMethod.GET)
-	public ResponseEntity<?> getPlant(@PathVariable(value = "uuid") String uuid) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(plantService.findById(uuid));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-	}
-
-
-	@GetMapping
-	public ResponseEntity<?> getAllPlants() {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(plantService.findAll());
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-	}
-
 	@RequestMapping(value="/{uuid}/planes", method=RequestMethod.GET)
 	public ResponseEntity<?> getPlanePlant(@PathVariable(value = "uuid") String uuid) {
 		try {
@@ -134,7 +77,7 @@ public class PlantController {
 			Plant plant = plantOpt.get();
 
 
-			String name = storageService.store(file, TenantContext.getCurrentTenant(), PLANTPLANEENTITY);
+			String name = storageService.store(file, plant.getUuid(), TenantContext.getCurrentTenant(), PLANTPLANEENTITY);
 
 			String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
 					.path("/download/")
@@ -162,7 +105,7 @@ public class PlantController {
 			Optional<Plant> plantOpt = plantService.findById(plantUuid);
 			Plant plant = plantOpt.get();
 
-			String name = storageService.store(file, TenantContext.getCurrentTenant(), PLANTPLANEENTITY);
+			String name = storageService.store(file, plant.getUuid(), TenantContext.getCurrentTenant(), PLANTPLANEENTITY);
 
 			String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
 					.path("/download/")
@@ -206,7 +149,7 @@ public class PlantController {
 	}
 
 	/** PLANT COORDINATES **/
-	@RequestMapping(value="/{uuid}/coordinates", method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	/*@RequestMapping(value="/{uuid}/coordinates", method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> savePlantCoordinates(@PathVariable(value = "uuid") String plantUuid, @RequestParam Map<String, String> values) {
 
 		PlantCoordinates plantCoordinates = createPlantCoordinates(values);
@@ -286,15 +229,5 @@ public class PlantController {
 
 		return plantCoordinates;
 	}
-
-
-	private Plant createPlant(Map<String, String> values) {
-		Plant plant = new Plant();
-		plant.setName(values.get("name"));
-		plant.setLocation(values.get("location"));
-		plant.setMaximumCapacity(Integer.parseInt(values.get("maximumCapacity")));
-		plant.setPhone(values.get("phone"));
-		plant.setAlternativePhone(values.get("alternativePhone"));
-		return plant;
-	}
+*/
 }

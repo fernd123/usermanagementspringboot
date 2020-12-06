@@ -28,7 +28,7 @@ public class ReasonServiceImpl implements ReasonService{
 		reasonInDB.setName(reason.getName());
 		reasonInDB.setDescription(reason.getDescription());
 		reasonInDB.setActive(reason.getActive());
-		reasonInDB.setPlantZone(reason.getPlantZone());
+		reasonInDB.setPlantCoordinate(reason.getPlantCoordinate());
 		return reasonRepository.save(reasonInDB);
 	}
 

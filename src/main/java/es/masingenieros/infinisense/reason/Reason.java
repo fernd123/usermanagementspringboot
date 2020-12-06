@@ -44,7 +44,7 @@ public class Reason extends DomainObject implements Serializable{
 	@OneToOne
     @JoinColumn(name = "plant_coordinate_id")
 	//@JsonIgnore
-    private PlantCoordinates plantZone;
+    private PlantCoordinates plantCoordinate;
 
 	public Set<Visit> getVisit() {
 		return visit;
@@ -54,12 +54,12 @@ public class Reason extends DomainObject implements Serializable{
 		this.visit = visit;
 	}
 
-	public PlantCoordinates getPlantZone() {
-		return plantZone;
+	public PlantCoordinates getPlantCoordinate() {
+		return plantCoordinate;
 	}
 
-	public void setPlantZone(PlantCoordinates plantZone) {
-		this.plantZone = plantZone;
+	public void setPlantCoordinate(PlantCoordinates plantCoordinate) {
+		this.plantCoordinate = plantCoordinate;
 	}
 
 	public String getName() {

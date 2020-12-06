@@ -47,8 +47,9 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public String store(MultipartFile file, String tenant, String entityName) {
+    public String store(MultipartFile file, String parentRegisterUuid, String tenant, String entityName) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        filename = parentRegisterUuid+"_"+filename;
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
@@ -129,10 +130,9 @@ public class FileSystemStorageService implements StorageService {
         try {
         	this.rootLocation = Paths.get(this.rootLocation.toString()+"/"+tenant+"/"+entityName);
             Path file = load(filename);
-            File fileToDelete = new File(file.toUri().toString());
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
-                FileSystemUtils.deleteRecursively(rootLocation.toFile());
+            	boolean result = Files.deleteIfExists(file);
                 this.rootLocation = Paths.get(this.pathOriginal);
             }
             else {
@@ -144,7 +144,9 @@ public class FileSystemStorageService implements StorageService {
         catch (MalformedURLException e) {
         	this.rootLocation = Paths.get(this.pathOriginal);
             throw new FileNotFoundException("Could not read file: " + filename, e);
-        }
+        } catch (IOException e) {
+        	this.rootLocation = Paths.get(this.pathOriginal);
+		}
     }
 
     @Override

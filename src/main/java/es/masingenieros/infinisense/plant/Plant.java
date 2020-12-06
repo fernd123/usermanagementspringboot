@@ -1,7 +1,14 @@
 package es.masingenieros.infinisense.plant;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import es.masingenieros.infinisense.lib.DomainObject;
 
@@ -25,6 +32,11 @@ public class Plant extends DomainObject{
 	//@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
     //@type="list"(access = JsonProperty.Access.READ_ONLY)
     //private Set<PlantPlane> plantPlane = new HashSet<PlantPlane>();
+	
+	@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
+    //@type="list"(access = JsonProperty.Access.READ_ONLY)
+	@JsonIgnore
+    private Set<PlantCoordinates> plantCoordinate = new HashSet<PlantCoordinates>();
 
 	public String getName() {
 		return name;

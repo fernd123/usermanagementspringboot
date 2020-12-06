@@ -29,6 +29,8 @@ public class CompanyController {
 	@RequestMapping(value="/create", method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<?> createCompanySchema(@RequestParam Map<String, String> values) throws Exception{
 		Company company = createCompany(values);
+		/* Trigger event handler to check data*/
+		this.companyService.save(company);
 		User userDefault = createUser(values);
 		company = companyService.createSchema(company, userDefault);
 		try {

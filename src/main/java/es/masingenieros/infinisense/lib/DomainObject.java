@@ -14,9 +14,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.hateoas.RepresentationModel;
-
-import es.masingenieros.infinisense.user.User;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

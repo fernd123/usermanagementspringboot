@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.masingenieros.infinisense.filestorage.StorageService;
 import es.masingenieros.infinisense.mulitenancy.TenantContext;
-import es.masingenieros.infinisense.reason.Reason;
 import es.masingenieros.infinisense.reason.service.ReasonService;
 import es.masingenieros.infinisense.user.User;
 import es.masingenieros.infinisense.user.UserSignature;
@@ -58,11 +57,11 @@ public class VisitController {
 	
 	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@Transactional(rollbackOn = Exception.class)
-	public ResponseEntity<?> createVisit(@RequestParam Map<String, String> values) throws Exception{
+	public ResponseEntity<?> createExternalUser(@RequestParam Map<String, String> values) throws Exception{
 		try {
 			JSONObject userJsonObj = new JSONObject(values.get("user"));
-			JSONObject reasonJsonObj = new JSONObject(values.get("visit"));
-			String reasonUuid = (String) reasonJsonObj.get("reason");
+			/*JSONObject reasonJsonObj = new JSONObject(values.get("visit"));*/
+			/*String reasonUuid = (String) reasonJsonObj.get("reason");*/
 			String dni = (String) userJsonObj.get("dni");
 
 			/* Get user */
@@ -85,20 +84,14 @@ public class VisitController {
 				userService.saveSignature(usignature);
 			}
 
-			/* Get reason */
-			Optional<Reason> reason = reasonService.findReasonByUuid(reasonUuid);
-			if(!reason.isPresent()) {
-				throw new Exception("Reason with uuid "+ reasonUuid + "does not exist");
-			}
-
 			Date now = new Date();
 			Visit visit = new Visit();
 			visit.setStartDate(new Timestamp(now.getTime()));
-			visit.setUser(user);
-			visit.setReason(reason.get());
+			visit.setUser(user);			
 
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(visitService.save(visit));
+			
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}

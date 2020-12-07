@@ -53,7 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.antMatchers("/api/company/**").hasAnyAuthority("MASTER")
 		.antMatchers("/api/public/user/**").hasAnyAuthority("ADMIN", "MASTER")
 		.antMatchers("/user").hasAnyRole("ADMIN", "USER")
-		.antMatchers("/api/user/**").permitAll()
+		.antMatchers("/api/user/authenticate").permitAll()
+		.antMatchers("/api/user/**").hasAnyAuthority("ADMIN")
 		.antMatchers("/api/**").authenticated()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //		.and().formLogin();

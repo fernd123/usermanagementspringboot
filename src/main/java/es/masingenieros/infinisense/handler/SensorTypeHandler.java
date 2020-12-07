@@ -10,7 +10,6 @@ import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
-import es.masingenieros.infinisense.epis.Epi;
 import es.masingenieros.infinisense.exceptions.FieldException;
 import es.masingenieros.infinisense.filestorage.StorageService;
 import es.masingenieros.infinisense.mulitenancy.TenantContext;

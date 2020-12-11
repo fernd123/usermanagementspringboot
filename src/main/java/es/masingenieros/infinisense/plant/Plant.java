@@ -29,9 +29,9 @@ public class Plant extends DomainObject{
 	@Column(name="maximum_capacity")
 	private Integer maximumCapacity;
 	
-	//@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
     //@type="list"(access = JsonProperty.Access.READ_ONLY)
-    //private Set<PlantPlane> plantPlane = new HashSet<PlantPlane>();
+    private Set<PlantPlane> plantPlane = new HashSet<PlantPlane>();
 	
 	@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
     //@type="list"(access = JsonProperty.Access.READ_ONLY)

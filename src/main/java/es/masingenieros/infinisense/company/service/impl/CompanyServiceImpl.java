@@ -137,14 +137,22 @@ public class CompanyServiceImpl implements CompanyService{
 			TenantContext.setCurrentTenant(currentTenant);*/
 			Date today = new Date();
 			userDefault.setPassword(passwordEncoder.encode(userDefault.getPassword()));
-			String sql = String.format("INSERT INTO %s.user (uuid, created_by, created_date, modified_by, modified_date, active, dni, email, firstname, lastname,password, roles, username) "
+			String insertUserSql = String.format("INSERT INTO %s.user (uuid, created_by, created_date, modified_by, modified_date, active, dni, email, firstname, lastname,password, roles, username) "
 					+ "VALUES (%s, %s, %s, %s, %s, %s, '%s', '%s', '%s', '%s', '%s', '%s', '%s')", 
 					tenantSchema, "0", "0", today.getTime(), "0", today.getTime(), 
 					userDefault.isActive(), userDefault.getDni(), userDefault.getEmail(),
 					userDefault.getFirstname(), userDefault.getLastname(),
 					userDefault.getPassword(), userDefault.getRoles(), 
 					userDefault.getUsername());
-			statement.execute(sql);
+			statement.execute(insertUserSql);
+			
+			String insertCompanySql = String.format("INSERT INTO %s.company (uuid, created_by, created_date, modified_by, modified_date, name, description, aliro, ergo, active, user_id) " + 
+			" VALUES (%s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s, %s);", 
+					tenantSchema, "0", "0", today.getTime(), "0", today.getTime(), 
+					company.getName(), company.getDescription(), company.getAliro(), company.getErgo(),
+					company.getActive(), ("(select uuid from "+tenantSchema+".user where username = '"+userDefault.getUsername()+"')"));
+			statement.execute(insertCompanySql);
+			
 
 		} catch (SQLException | IllegalArgumentException e) {
 			try {
@@ -276,14 +284,56 @@ public class CompanyServiceImpl implements CompanyService{
 	@Override
 	public Company update(String uuid, Company company) {
 		Optional<Company> optReason = companyRepository.findById(uuid);
-		Company epiInDb = optReason.get();
-		epiInDb.setName(company.getName());
-		epiInDb.setDescription(company.getDescription());
-		epiInDb.setAliro(company.getAliro());
-		epiInDb.setErgo(company.getErgo());
-		epiInDb.setActive(company.getActive());
+		Company companyInDb = optReason.get();
+		companyInDb.setName(company.getName());
+		companyInDb.setDescription(company.getDescription());
+		companyInDb.setAliro(company.getAliro());
+		companyInDb.setErgo(company.getErgo());
+		companyInDb.setActive(company.getActive());
+		
+		// Update data into other schema
+		Connection connection = null;
+		Statement statement = null;
+		String tenantSchema = companyInDb.getName();
+		try {
+			connection = dataSource.getConnection();
 
-		return companyRepository.save(epiInDb);
+			statement = connection.createStatement();
+
+			log.info("Execute command UPDATE COMPANY IN TENANT {}", companyInDb.getName());
+
+			Date today = new Date();
+			
+			String updateCompanySql = String.format("UPDATE %s.company SET modified_date = '%s', description = '%s', ergo=%s, aliro=%s WHERE (uuid = '0');", 
+					tenantSchema, today.getTime(), company.getDescription(), company.getErgo(), company.getAliro());
+			statement.executeUpdate(updateCompanySql);
+			
+
+		} catch (SQLException | IllegalArgumentException e) {
+			e.printStackTrace();
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					log.error("Error closig statement on createOrUpdateTenantSchema {}.",
+							tenantSchema, e);
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					log.error("Error closig connection on createOrUpdateTenantSchema {}.",
+							tenantSchema, e);
+				}
+			}
+			companyRepository.save(companyInDb);
+		}
+		return companyInDb;
+
+		
+
 	}
 
 	@Override

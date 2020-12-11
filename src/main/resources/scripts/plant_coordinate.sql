@@ -11,10 +11,14 @@ CREATE TABLE schema_name_replace.`plant_coordinates` (
   `virtual_zone_type` varchar(255) DEFAULT NULL,
   `plant_id` varchar(255) DEFAULT NULL,
   `sensor_type_id` varchar(255) DEFAULT NULL,
+  `init_coordinate_id` varchar(255) DEFAULT NULL,
+  `end_coordinate_id` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`uuid`),
   KEY `FKr98p710soemd68nihiaiyys3t` (`plant_id`),
   KEY `FK2f42uvdt21vhgafq7p7q9fjs` (`sensor_type_id`),
   CONSTRAINT `FK2f42uvdt21vhgafq7p7q9fjs` FOREIGN KEY (`sensor_type_id`) REFERENCES schema_name_replace.`sensor_type` (`uuid`),
+  CONSTRAINT `Faksa672asdakqoLlLabcDEfjg` FOREIGN KEY (`init_coordinate_id`) REFERENCES schema_name_replace.`plant_coordinates` (`uuid`),
+  CONSTRAINT `asaldsaasadawqqKkljsdaKlLo` FOREIGN KEY (`end_coordinate_id`) REFERENCES schema_name_replace.`plant_coordinates` (`uuid`),
   CONSTRAINT `FKr98p710soemd68nihiaiyys3t` FOREIGN KEY (`plant_id`) REFERENCES schema_name_replace.`plant` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

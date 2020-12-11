@@ -1,14 +1,15 @@
 package es.masingenieros.infinisense.visit;
 
+import java.sql.Blob;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import es.masingenieros.infinisense.lib.DomainObject;
@@ -42,6 +43,52 @@ public class Visit extends DomainObject{
 	@Column(name="end_date")
 	private Timestamp endDate;
 	
+	@Column(name="epis")
+	private String epis;
+	
+	@Column(name="firstname")
+	private String firstname;
+	
+	@Column(name="lastname")
+	private String lastname;
+	
+	@Column(name="dni")
+	private String dni;
+	
+	public String getDni() {
+		return dni;
+	}
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	@Column(name="signature")
+	private String signature;
+	
+	public String getFirstname() {
+		return firstname;
+	}
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+	public String getLastname() {
+		return lastname;
+	}
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+	public String getSignature() {
+		return signature;
+	}
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+	public String getEpis() {
+		return epis;
+	}
+	public void setEpis(String epis) {
+		this.epis = epis;
+	}
 	public Reason getReason() {
 		return reason;
 	}

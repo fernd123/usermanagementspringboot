@@ -83,7 +83,7 @@ public class CompanyController {
 		}
 	}
 	
-
+/*
 	@GetMapping
 	public ResponseEntity<?> getAllCompanys() {
 		try {
@@ -91,7 +91,7 @@ public class CompanyController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-	}
+	}*/
 
 	private Company createCompany(Map<String, String> values) {
 		Company company = new Company();

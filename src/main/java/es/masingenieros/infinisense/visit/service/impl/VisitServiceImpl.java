@@ -1,6 +1,5 @@
 package es.masingenieros.infinisense.visit.service.impl;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Optional;
 
@@ -31,16 +30,37 @@ public class VisitServiceImpl implements VisitService{
 	}
 
 	@Override
-	public Visit update(String uuid) {
-		Optional<Visit> visitOpt = visitRepository.findById(uuid);
+	public Visit update(Visit visit) {
+		Optional<Visit> visitOpt = visitRepository.findById(visit.getUuid());
 		Visit visitInDb = visitOpt.isPresent() ? visitOpt.get() : null;
 		if(visitInDb == null) {
 			return null;
 		}
-		Date date = new Date();
-		if(visitInDb.getEndDate() == null) {
-			visitInDb.setEndDate(new Timestamp(date.getTime()));
+		if(visit.getEndDate() != null) {
+			visitInDb.setEndDate(visit.getEndDate());
+		}
+		
+		if(visit.getEpis() != null) {
+			visitInDb.setEpis(visit.getEpis());
+		}
+		
+		if(visitInDb.getFirstname() == null) {			
+			visitInDb.setFirstname(visit.getFirstname());
+		}
+		if(visitInDb.getLastname() == null) {			
+			visitInDb.setLastname(visit.getLastname());
+		}
+		if(visitInDb.getDni() == null) {			
+			visitInDb.setDni(visit.getDni());
+		}
+		if(visitInDb.getSignature() == null) {			
+			visitInDb.setSignature(visit.getSignature());		
 		}
 		return visitRepository.save(visitInDb);
+	}
+
+	@Override
+	public Optional<Visit> findByUuid(String uuid) {
+		return visitRepository.findById(uuid);
 	}
 }

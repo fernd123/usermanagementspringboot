@@ -29,6 +29,14 @@ public class PlantCoordinates extends DomainObject{
     @JoinColumn(name = "sensor_type_id")
 	private SensorType sensorType;
 	
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "init_coordinate_id")
+	private PlantCoordinates initCoordinate;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "end_coordinate_id")
+	private PlantCoordinates endCoordinate;
+	
 	@Column(name="sensor_id")
 	private String sensorId;
 	

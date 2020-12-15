@@ -27,6 +27,12 @@ public class Company extends DomainObject implements Serializable{
 
 	private String description;
 	
+	private String email;
+
+	private String port;
+	
+	private String server;
+	
 	private Boolean aliro;
 
 	private Boolean ergo;
@@ -83,5 +89,29 @@ public class Company extends DomainObject implements Serializable{
 
 	public void setErgo(Boolean ergo) {
 		this.ergo = ergo;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	public String getServer() {
+		return server;
+	}
+
+	public void setServer(String server) {
+		this.server = server;
 	}
 }

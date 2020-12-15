@@ -7,6 +7,7 @@ CREATE TABLE schema_name_replace.`reason` (
   `active` bit(1) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
+  `isproject` bit(1) DEFAULT NULL,
   `plant_coordinate_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`uuid`),
   UNIQUE KEY `UK_40l39kkkcn6q747ubmvel7onh` (`name`),

@@ -33,8 +33,9 @@ allprojects {
 		implementation('org.slf4j:slf4j-api')
 		implementation 'org.json:json:20200518'
 		//compile('org.liquibase:liquibase-core:4.0.0')
-		compile group: 'commons-io', name: 'commons-io', version: '2.6'
     	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+		compile group: 'commons-io', name: 'commons-io', version: '2.6'
+		compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.3.4.RELEASE'
 		
 		
 

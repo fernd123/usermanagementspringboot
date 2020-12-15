@@ -3,6 +3,8 @@ package es.masingenieros.infinisense.reason.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.internet.AddressException;
+
 import es.masingenieros.infinisense.reason.Reason;
 
 public interface ReasonService {
@@ -12,4 +14,5 @@ public interface ReasonService {
 	void deleteReasonById(List<String> reasonUuids);
 	Iterable<Reason> findAll();
 	Optional<Reason> findReasonByUuid(String uuid);
+	boolean createProject(List<String> emailList, String reasonUuid) throws AddressException;
 }

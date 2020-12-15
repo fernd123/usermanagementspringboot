@@ -3,7 +3,6 @@ package es.masingenieros.infinisense.security;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +46,24 @@ public class JwtUtil {
 		Map<String, Object> claims = new HashMap<>();
 		return createToken(claims, userDetails);
 	}
+	
+	public String generateTokenForm(Map<String, Object> claims) throws Exception {
+		
+		return createTokenForm(claims);
+	}
+	
+	private String createTokenForm(Map<String, Object> claims) throws Exception {
+		Iterable<Company> companyOpt = this.companyRepository.findAll();
+		Company company = companyOpt.iterator().hasNext() ? companyOpt.iterator().next() : null;
+		if(company == null) {
+			throw new Exception("Must be exist a company!");
+		}
+		return Jwts.builder().setClaims(claims)
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10 * 7))
+				.signWith(SignatureAlgorithm.HS384, SECRET_KEY).compact();
+	}
+	
+	
 	private String createToken(Map<String, Object> claims, CustomUserDetails userDetails) throws Exception {
 		Iterable<Company> companyOpt = this.companyRepository.findAll();
 		Company company = companyOpt.iterator().hasNext() ? companyOpt.iterator().next() : null;

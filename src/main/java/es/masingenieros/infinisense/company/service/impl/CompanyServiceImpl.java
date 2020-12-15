@@ -80,6 +80,10 @@ public class CompanyServiceImpl implements CompanyService{
 			listOfFiles.add("plant_plane.sql");
 			listOfFiles.add("plant_coordinate.sql");
 			listOfFiles.add("reason.sql");
+			listOfFiles.add("reason_project_email.sql"); // a quien se le envia el email para darse de alta en el proyecto
+			listOfFiles.add("reason_project_token.sql"); // tabla para guardar la caducidad del formulario que se envia
+			listOfFiles.add("reason_project_participant.sql"); // participantes del proyecto
+			
 			listOfFiles.add("visit.sql");
 		}
 
@@ -145,14 +149,16 @@ public class CompanyServiceImpl implements CompanyService{
 					userDefault.getPassword(), userDefault.getRoles(), 
 					userDefault.getUsername());
 			statement.execute(insertUserSql);
-			
+
 			String insertCompanySql = String.format("INSERT INTO %s.company (uuid, created_by, created_date, modified_by, modified_date, name, description, aliro, ergo, active, user_id) " + 
-			" VALUES (%s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s, %s);", 
+					" VALUES (%s, %s, %s, %s, %s, '%s', '%s', '%s', '%s', %s, %s, %s, %s, %s);", 
 					tenantSchema, "0", "0", today.getTime(), "0", today.getTime(), 
-					company.getName(), company.getDescription(), company.getAliro(), company.getErgo(),
+					company.getName(), company.getDescription(),
+					company.getEmail(), company.getServer(), company.getPort(), 
+					company.getAliro(), company.getErgo(),
 					company.getActive(), ("(select uuid from "+tenantSchema+".user where username = '"+userDefault.getUsername()+"')"));
 			statement.execute(insertCompanySql);
-			
+
 
 		} catch (SQLException | IllegalArgumentException e) {
 			try {
@@ -171,7 +177,7 @@ public class CompanyServiceImpl implements CompanyService{
 			throw new CreateUpdateTenantSchemaException(
 					"Error on createOrUpdate schema : " + tenantSchema, e);
 		} finally {
-			
+
 			if (statement != null) {
 				try {
 					statement.close();
@@ -287,10 +293,13 @@ public class CompanyServiceImpl implements CompanyService{
 		Company companyInDb = optReason.get();
 		companyInDb.setName(company.getName());
 		companyInDb.setDescription(company.getDescription());
+		companyInDb.setEmail(company.getEmail());
+		companyInDb.setServer(company.getServer());
+		companyInDb.setPort(company.getPort());
 		companyInDb.setAliro(company.getAliro());
 		companyInDb.setErgo(company.getErgo());
 		companyInDb.setActive(company.getActive());
-		
+
 		// Update data into other schema
 		Connection connection = null;
 		Statement statement = null;
@@ -303,11 +312,11 @@ public class CompanyServiceImpl implements CompanyService{
 			log.info("Execute command UPDATE COMPANY IN TENANT {}", companyInDb.getName());
 
 			Date today = new Date();
-			
-			String updateCompanySql = String.format("UPDATE %s.company SET modified_date = '%s', description = '%s', ergo=%s, aliro=%s WHERE (uuid = '0');", 
-					tenantSchema, today.getTime(), company.getDescription(), company.getErgo(), company.getAliro());
+
+			String updateCompanySql = String.format("UPDATE %s.company SET modified_date = '%s', description = '%s', email='%s', server='%s', port=%s, ergo=%s, aliro=%s WHERE (uuid = '0');", 
+					tenantSchema, today.getTime(), company.getDescription(), company.getEmail(), company.getServer(), company.getPort(), company.getErgo(), company.getAliro());
 			statement.executeUpdate(updateCompanySql);
-			
+
 
 		} catch (SQLException | IllegalArgumentException e) {
 			e.printStackTrace();
@@ -332,7 +341,7 @@ public class CompanyServiceImpl implements CompanyService{
 		}
 		return companyInDb;
 
-		
+
 
 	}
 

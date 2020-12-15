@@ -35,11 +35,22 @@ public class Reason extends DomainObject implements Serializable{
 	
 	private Boolean active;
 	
+	private Boolean isproject;
+
 	@Column(nullable = true)
     @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
 	@JsonIgnore
-    //@JsonProperty(access = JsonProperty.Access.AUTO)
     private Set<Visit> visit = new HashSet<Visit>();
+	
+	@Column(nullable = true)
+    @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
+	@JsonIgnore
+    private Set<ReasonProjectEmail> reasonProjectEmail = new HashSet<ReasonProjectEmail>();
+	
+	@Column(nullable = true)
+    @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
+	@JsonIgnore
+    private Set<ReasonProjectParticipant> reasonProjectParticipants = new HashSet<ReasonProjectParticipant>();
  
 	@OneToOne
     @JoinColumn(name = "plant_coordinate_id")
@@ -84,5 +95,13 @@ public class Reason extends DomainObject implements Serializable{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Boolean getIsproject() {
+		return isproject;
+	}
+
+	public void setIsproject(Boolean isproject) {
+		this.isproject = isproject;
 	}
 }

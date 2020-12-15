@@ -114,9 +114,9 @@ public class VisitController {
 				visit.setSignature(path);
 			}
 		}catch(Exception e) {
-			
+
 		}
-		
+
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(visitService.update(visit));

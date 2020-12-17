@@ -5,6 +5,7 @@ CREATE TABLE schema_name_replace.`reason_project_email` (
   `modified_by` varchar(255) DEFAULT NULL,
   `modified_date` bigint DEFAULT NULL,
   `active` bit(1) DEFAULT NULL,
+  `company` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `answered` bit(1) DEFAULT NULL,
   `sended` bit(1) DEFAULT NULL,

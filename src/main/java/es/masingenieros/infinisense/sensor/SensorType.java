@@ -10,10 +10,7 @@ import es.masingenieros.infinisense.lib.DomainObject;
 @Table(name = "sensor_type")
 public class SensorType extends DomainObject{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1998628880732174440L;
 
 	@Column(nullable = false, unique = true)
 	private String name;

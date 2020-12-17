@@ -39,6 +39,8 @@ public class Company extends DomainObject implements Serializable{
 
 	private Boolean active;
 	
+	private String image; // path
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
 	private User user;
@@ -113,5 +115,13 @@ public class Company extends DomainObject implements Serializable{
 
 	public void setServer(String server) {
 		this.server = server;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 }

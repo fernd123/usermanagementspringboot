@@ -6,6 +6,7 @@ CREATE TABLE schema_name_replace.`company` (
   `modified_date` bigint DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `server` varchar(255) DEFAULT NULL,
   `port` bigint DEFAULT NULL,
@@ -15,6 +16,7 @@ CREATE TABLE schema_name_replace.`company` (
   `user_id` varchar(255) DEFAULT NULL,
 
   PRIMARY KEY (`uuid`),
+  UNIQUE KEY `UK_companyname` (`name`),
   CONSTRAINT `companyuserdefault` FOREIGN KEY (`user_id`) REFERENCES schema_name_replace.`user` (`uuid`),
   UNIQUE KEY `UK_52mr58enuprjs3ftes7p7h321` (`name`)
 );

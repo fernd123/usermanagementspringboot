@@ -83,7 +83,7 @@ public class CompanyServiceImpl implements CompanyService{
 			listOfFiles.add("reason_project_email.sql"); // a quien se le envia el email para darse de alta en el proyecto
 			listOfFiles.add("reason_project_token.sql"); // tabla para guardar la caducidad del formulario que se envia
 			listOfFiles.add("reason_project_participant.sql"); // participantes del proyecto
-			
+			listOfFiles.add("message.sql");
 			listOfFiles.add("visit.sql");
 		}
 
@@ -150,7 +150,7 @@ public class CompanyServiceImpl implements CompanyService{
 					userDefault.getUsername());
 			statement.execute(insertUserSql);
 
-			String insertCompanySql = String.format("INSERT INTO %s.company (uuid, created_by, created_date, modified_by, modified_date, name, description, aliro, ergo, active, user_id) " + 
+			String insertCompanySql = String.format("INSERT INTO %s.company (uuid, created_by, created_date, modified_by, modified_date, name, description, email, server, port, aliro, ergo, active, user_id) " + 
 					" VALUES (%s, %s, %s, %s, %s, '%s', '%s', '%s', '%s', %s, %s, %s, %s, %s);", 
 					tenantSchema, "0", "0", today.getTime(), "0", today.getTime(), 
 					company.getName(), company.getDescription(),
@@ -299,6 +299,7 @@ public class CompanyServiceImpl implements CompanyService{
 		companyInDb.setAliro(company.getAliro());
 		companyInDb.setErgo(company.getErgo());
 		companyInDb.setActive(company.getActive());
+		companyInDb.setImage(company.getImage());
 
 		// Update data into other schema
 		Connection connection = null;
@@ -313,8 +314,8 @@ public class CompanyServiceImpl implements CompanyService{
 
 			Date today = new Date();
 
-			String updateCompanySql = String.format("UPDATE %s.company SET modified_date = '%s', description = '%s', email='%s', server='%s', port=%s, ergo=%s, aliro=%s WHERE (uuid = '0');", 
-					tenantSchema, today.getTime(), company.getDescription(), company.getEmail(), company.getServer(), company.getPort(), company.getErgo(), company.getAliro());
+			String updateCompanySql = String.format("UPDATE %s.company SET modified_date = '%s', description = '%s', email='%s', server='%s', port=%s, ergo=%s, aliro=%s, image='%s' WHERE (uuid = '0');", 
+					tenantSchema, today.getTime(), company.getDescription(), company.getEmail(), company.getServer(), company.getPort(), company.getErgo(), company.getAliro(), company.getImage());
 			statement.executeUpdate(updateCompanySql);
 
 

@@ -36,6 +36,8 @@ public class Reason extends DomainObject implements Serializable{
 	private Boolean active;
 	
 	private Boolean isproject;
+	
+	private Boolean finished;
 
 	@Column(nullable = true)
     @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL)
@@ -103,5 +105,13 @@ public class Reason extends DomainObject implements Serializable{
 
 	public void setIsproject(Boolean isproject) {
 		this.isproject = isproject;
+	}
+
+	public Boolean getFinished() {
+		return finished;
+	}
+
+	public void setFinished(Boolean finished) {
+		this.finished = finished;
 	}
 }

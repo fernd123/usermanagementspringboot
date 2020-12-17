@@ -30,9 +30,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		
 		auth.userDetailsService(userDetailsService);
 	}
+	
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -46,16 +46,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http.csrf().disable()
 		.cors().and()
 		.authorizeRequests()	
-		.antMatchers("/api/reason/**").hasAnyAuthority("ADMIN")
-		.antMatchers("/api/visit/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/reason/**").hasAnyAuthority("ADMIN", "EXTERNAL")
+		.antMatchers("/api/visit/**").hasAnyAuthority("ADMIN", "EXTERNAL")
 		.antMatchers("/api/epis/**").hasAnyAuthority("ADMIN")
 		.antMatchers("/api/sensortype/**").hasAnyAuthority("ADMIN")
 		.antMatchers("/api/company/**").hasAnyAuthority("MASTER", "ADMIN")
 		.antMatchers("/api/public/user/**").hasAnyAuthority("ADMIN", "MASTER")
 		.antMatchers("/user").hasAnyRole("ADMIN", "USER")
 		.antMatchers("/api/user/authenticate").permitAll()
-		.antMatchers("/api/user/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/user/**").hasAnyAuthority("ADMIN", "EXTERNAL")
 		.antMatchers("/api/**").authenticated()
+		.and().httpBasic()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //		.and().formLogin();
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

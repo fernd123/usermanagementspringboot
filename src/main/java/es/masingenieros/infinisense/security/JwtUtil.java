@@ -65,17 +65,19 @@ public class JwtUtil {
 	
 	
 	private String createToken(Map<String, Object> claims, CustomUserDetails userDetails) throws Exception {
+		
 		Iterable<Company> companyOpt = this.companyRepository.findAll();
 		Company company = companyOpt.iterator().hasNext() ? companyOpt.iterator().next() : null;
-		if(company == null) {
+		boolean isMaster = userDetails.getUser().getRoles().contains("MASTER");
+		if(company == null && !isMaster) {
 			throw new Exception("Must be exist a company!");
 		}
 		return Jwts.builder().setClaims(claims)
 				.setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
 				.claim("authorities", userDetails.getAuthorities())// Custom data
 				.claim("uuid", userDetails.getUuid())// Custom data
-				.claim("ergo", company.getErgo())// Custom data
-				.claim("aliro", company.getAliro())// Custom data
+				.claim("ergo", company == null && isMaster ? true : company.getErgo())// Custom data
+				.claim("aliro", company == null && isMaster ? true : company.getAliro())// Custom data
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
 				.signWith(SignatureAlgorithm.HS384, SECRET_KEY).compact();
 	}

@@ -41,6 +41,10 @@ public class Visit extends DomainObject{
 	@Column(name="end_date")
 	private Timestamp endDate;
 	
+	private Boolean canceled;
+	
+	private String canceledreason;
+	
 	@Column(name="epis")
 	private String epis;
 	
@@ -110,5 +114,17 @@ public class Visit extends DomainObject{
 	}
 	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
+	}
+	public Boolean getCanceled() {
+		return canceled;
+	}
+	public void setCanceled(Boolean canceled) {
+		this.canceled = canceled;
+	}
+	public String getCanceledreason() {
+		return canceledreason;
+	}
+	public void setCanceledreason(String canceledreason) {
+		this.canceledreason = canceledreason;
 	}	
 }

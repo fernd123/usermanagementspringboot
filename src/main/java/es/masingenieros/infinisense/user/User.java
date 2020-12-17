@@ -7,8 +7,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import es.masingenieros.infinisense.lib.DomainObject;
+import es.masingenieros.infinisense.reason.ReasonProjectParticipant;
 import es.masingenieros.infinisense.visit.Visit;
 
 @Entity
@@ -42,9 +44,21 @@ public class User extends DomainObject{
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Visit> visit = new HashSet<Visit>();
 	
-	/*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserSignature signature;*/
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<ReasonProjectParticipant> reasonProjectParticipant = new HashSet<ReasonProjectParticipant>();
+	
+	/* Recursive problem
+	 * @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserSignature signature;
     
+	public UserSignature getSignature() {
+		return signature;
+	}
+
+	public void setSignature(UserSignature signature) {
+		this.signature = signature;
+	}*/
+
 	public String getUsername() {
 		return username;
 	}

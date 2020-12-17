@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.masingenieros.infinisense.mail.EmailService;
+import es.masingenieros.infinisense.message.Message;
+import es.masingenieros.infinisense.message.MessageEnum;
+import es.masingenieros.infinisense.message.repository.MessageRepository;
 import es.masingenieros.infinisense.mulitenancy.TenantContext;
 import es.masingenieros.infinisense.reason.Reason;
 import es.masingenieros.infinisense.reason.ReasonProjectEmail;
@@ -35,6 +38,9 @@ public class ReasonServiceImpl implements ReasonService{
 	
 	@Autowired
 	ReasonProjectTokenRepository reasonProjectTokenRepository;
+	
+	@Autowired
+	MessageRepository messageRepository;
 
 	@Autowired 
 	EmailService emailService;
@@ -79,7 +85,14 @@ public class ReasonServiceImpl implements ReasonService{
 	}
 
 	@Override
-	public boolean createProject(List<String> emailListReq, String reasonUuid) throws AddressException {
+	public boolean createProject(List<String> emailListReq, List<String> companyList, String reasonUuid) throws Exception {
+
+		// Check if message exists
+		Message messageProjectInvitation = messageRepository.findByType(MessageEnum.PROJECTINVITATION);
+		
+		if(messageProjectInvitation == null) {
+			throw new Exception("Message type "+MessageEnum.PROJECTINVITATION+" does not exists");
+		}
 
 		Optional<Reason> reasonOpt = reasonRepository.findById(reasonUuid);
 		Reason reason = reasonOpt.get();
@@ -97,16 +110,20 @@ public class ReasonServiceImpl implements ReasonService{
 			}
 		}
 
-		for (String email : emailList) {
+		for (int i=0; i<emailList.size(); i++) {
 			ReasonProjectEmail rp = new ReasonProjectEmail();
-			rp.setEmail(email);
+			rp.setEmail(emailList.get(i));
+			rp.setCompany(companyList.get(i));
 			rp.setActive(true);
 			rp.setReason(reasonOpt.get());
+			reasonProjectEmailRepository.save(rp);
+
 			try {
 				// Generate form token
 				Map<String, Object> claims = new HashMap<>();
-				claims.put("tenantid", TenantContext.getCurrentTenant());
-				claims.put("reasonuuid", reasonUuid);
+				//claims.put("tenantid", TenantContext.getCurrentTenant());
+				claims.put("reasonUuid", reasonUuid);
+				claims.put("reasonProjectEmailUuid", rp.getUuid());
 				final String jwt = jwtTokenUtil.generateTokenForm(claims);
 				
 				ReasonProjectToken reasonProjectToken = new ReasonProjectToken();
@@ -114,12 +131,20 @@ public class ReasonServiceImpl implements ReasonService{
 				reasonProjectToken.setReason(reason);
 				reasonProjectTokenRepository.save(reasonProjectToken);
 				
-				emailService.sendSimpleMessage(email, "Proyecto asignado", "Hola, por favor rellene los datos. http://localhost:4200/user-pages/update-project?token="+reasonProjectToken.getUuid());
+				String url = "http://localhost:4200/user-pages/update-project?token="+reasonProjectToken.getUuid()+"&tenant="+TenantContext.getCurrentTenant();
+				String message = messageRepository.findByType(MessageEnum.PROJECTINVITATION).getName();
+				message = (message.replace("$name", companyList.get(i)));
+				message = (message.replace("$project", reason.getName()));
+				message = (message.replace("$url", url));
+
+				emailService.sendSimpleMessage(emailList.get(i), "Proyecto asignado", message);
 				rp.setSended(true);
-				reasonProjectEmailRepository.save(rp);
 				
 			}catch(Exception e) {
+				rp.setSended(false);
 				e.printStackTrace();
+			}finally {
+				reasonProjectEmailRepository.save(rp);
 			}
 		}
 		return true;

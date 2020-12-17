@@ -14,5 +14,5 @@ public interface ReasonService {
 	void deleteReasonById(List<String> reasonUuids);
 	Iterable<Reason> findAll();
 	Optional<Reason> findReasonByUuid(String uuid);
-	boolean createProject(List<String> emailList, String reasonUuid) throws AddressException;
+	boolean createProject(List<String> emailList, List<String> companyList, String reasonUuid) throws AddressException, Exception;
 }

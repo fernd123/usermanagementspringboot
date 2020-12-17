@@ -19,6 +19,8 @@ public class ReasonProjectEmail extends DomainObject implements Serializable{
 
 	@Email
 	private String email;
+	
+	private String company;
 
 	private Boolean sended;
 	
@@ -68,6 +70,14 @@ public class ReasonProjectEmail extends DomainObject implements Serializable{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
  
 }

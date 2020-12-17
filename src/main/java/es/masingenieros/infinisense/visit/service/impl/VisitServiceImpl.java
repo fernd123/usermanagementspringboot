@@ -1,6 +1,5 @@
 package es.masingenieros.infinisense.visit.service.impl;
 
-import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +43,14 @@ public class VisitServiceImpl implements VisitService{
 			visitInDb.setEpis(visit.getEpis());
 		}
 		
+		if(visit.getCanceled() != null) {
+			visitInDb.setCanceled(visit.getCanceled());
+		}
+		
+		if(visit.getCanceledreason() != null) {
+			visitInDb.setCanceledreason(visit.getCanceledreason());
+		}
+		
 		if(visitInDb.getFirstname() == null) {			
 			visitInDb.setFirstname(visit.getFirstname());
 		}
@@ -53,6 +60,7 @@ public class VisitServiceImpl implements VisitService{
 		if(visitInDb.getDni() == null) {			
 			visitInDb.setDni(visit.getDni());
 		}
+		
 		if(visitInDb.getSignature() == null) {			
 			visitInDb.setSignature(visit.getSignature());		
 		}

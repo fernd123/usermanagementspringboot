@@ -38,6 +38,7 @@ import es.masingenieros.infinisense.mulitenancy.TenantContext;
 import es.masingenieros.infinisense.reason.service.ReasonService;
 import es.masingenieros.infinisense.user.User;
 import es.masingenieros.infinisense.user.UserSignature;
+import es.masingenieros.infinisense.user.repository.UserSignatureRepository;
 import es.masingenieros.infinisense.user.service.UserService;
 import es.masingenieros.infinisense.visit.service.VisitService;
 
@@ -50,6 +51,9 @@ public class VisitController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	UserSignatureRepository userSignatureRepository;
 
 	@Autowired 
 	ReasonService reasonService;
@@ -70,6 +74,8 @@ public class VisitController {
 			/*JSONObject reasonJsonObj = new JSONObject(values.get("visit"));*/
 			/*String reasonUuid = (String) reasonJsonObj.get("reason");*/
 			String dni = (String) userJsonObj.get("dni");
+			String signature = null;
+			try { signature = userJsonObj.getString(("signature")); }catch(Exception e) { }// No signature
 
 			/* Get user */
 			Optional<User> userOpt = userService.getUserByDni(dni);
@@ -83,18 +89,22 @@ public class VisitController {
 				user.setEmail(userJsonObj.getString("email")); 
 				user.setActive(true);
 				user = userService.save(user);
-
-				UserSignature usignature = new UserSignature();
-				String path = convertBaseIntoImage(userJsonObj.getString(("signature")), user.getDni());
-				usignature.setPath(path);
-				usignature.setUser(user);
-				userService.saveSignature(usignature);
+				if(signature != null) {					
+					createUserSignature(signature, user);
+				}
+			}else{
+				if(signature != null) {					
+					createUserSignature(signature, user);
+				}
 			}
+
+
 
 			Date now = new Date();
 			Visit visit = new Visit();
 			visit.setStartDate(new Timestamp(now.getTime()));
 			visit.setUser(user);			
+			visit.setCanceled(false);
 
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(visitService.save(visit));
@@ -102,6 +112,14 @@ public class VisitController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
+	}
+
+	private void createUserSignature(String signature, User user) {
+		UserSignature usignature = new UserSignature();
+		String path = convertBaseIntoImage(signature, user.getDni());
+		usignature.setPath(path);
+		usignature.setUser(user);
+		userService.saveSignature(usignature);
 	}
 
 	@RequestMapping(method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -140,7 +158,9 @@ public class VisitController {
 		try {
 
 			Optional<Visit> visit = visitService.findByUuid(uuid);
-			Resource resource = storageService.loadAsResource(visit.get().getSignature(),TenantContext.getCurrentTenant(), "usersignature");
+			User user = visit.get().getUser();
+			UserSignature userSignature = userSignatureRepository.findByUser(user);
+			Resource resource = storageService.loadAsResource(userSignature.getPath(),TenantContext.getCurrentTenant(), "usersignature");
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.CONTENT_DISPOSITION,

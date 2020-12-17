@@ -21,5 +21,9 @@ public interface VisitRepository extends PagingAndSortingRepository<Visit, Strin
 			+ "and DATE(start_date) = CURDATE()",
 			nativeQuery = true)
 	int todayVisitsByPlant(@Param("plantUuid") String plantUuid);
-	
+
+
+	@Query(value="SELECT v from Visit as v join v.user as u where u.dni = ?1 and v.endDate is null and v.canceled = false")
+	Visit searchCurrentVisitUser(@Param("dniparam") String dni);
+
 }

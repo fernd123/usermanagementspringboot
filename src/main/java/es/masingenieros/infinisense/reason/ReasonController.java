@@ -40,9 +40,9 @@ public class ReasonController {
 	
 	@RequestMapping(value="{reasonUuid}/project", method=RequestMethod.POST)
 	public ResponseEntity<?> createNewProject(@PathVariable(value = "reasonUuid") String reasonUuid,
-			@RequestParam(value = "emaillist") List<String> emailList) {
+			@RequestParam(value = "emaillist") List<String> emailList, @RequestParam(value = "companylist") List<String> companyList) {
 		try {
-			reasonService.createProject(emailList, reasonUuid);
+			reasonService.createProject(emailList, companyList, reasonUuid);
 			return ResponseEntity.status(HttpStatus.OK).body(emailList);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

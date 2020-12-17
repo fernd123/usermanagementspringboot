@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import es.masingenieros.infinisense.user.User;
 
-/* Capa para persistir la información */
+/* Capa para persistir la informacion */
 @RepositoryRestResource(path = "user")
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public interface UserRepository extends PagingAndSortingRepository<User, String> {

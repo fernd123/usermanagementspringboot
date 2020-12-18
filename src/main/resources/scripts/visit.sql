@@ -7,7 +7,7 @@ CREATE TABLE schema_name_replace.`visit` (
   `end_date` datetime(6) DEFAULT NULL,
   `start_date` datetime(6) DEFAULT NULL,
   `canceled` bit(1) NOT NULL,
-  `canceledreason` longtext NOT NULL,
+  `canceledreason` longtext DEFAULT NULL,
   `epis` varchar(255) DEFAULT NULL,
   `dni` varchar(255) DEFAULT NULL,
   `firstname` varchar(255) DEFAULT NULL,

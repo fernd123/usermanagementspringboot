@@ -1,10 +1,12 @@
 package es.masingenieros.infinisense.message;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import es.masingenieros.infinisense.lib.DomainObject;
 
 @Entity
+@Table(name = "message")
 public class Message extends DomainObject{
 
 	private static final long serialVersionUID = 6219328101884542230L;

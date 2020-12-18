@@ -2,7 +2,9 @@ package es.masingenieros.infinisense.company.service.impl;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -123,9 +125,9 @@ public class CompanyServiceImpl implements CompanyService{
 
 			for (String fname : listOfFiles) {
 				Resource resource = new ClassPathResource("scripts/"+fname);
-				File file = resource.getFile();
+				InputStream  file = resource.getInputStream();
 				//File file = resource.getFile();
-				String query = IOUtils.toString(new FileReader(file));
+				String query = IOUtils.toString(file, StandardCharsets.UTF_8);
 				query = query.replace("schema_name_replace", tenantSchema);
 				if(!schemaExec) {
 					statement.execute(String.format("CREATE SCHEMA IF NOT EXISTS %s", tenantSchema));

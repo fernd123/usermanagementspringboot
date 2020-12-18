@@ -8,12 +8,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import es.masingenieros.infinisense.lib.DomainObject;
 import es.masingenieros.infinisense.reason.ReasonProjectParticipant;
 import es.masingenieros.infinisense.visit.Visit;
 
 @Entity
+@Table(name = "user")
 public class User extends DomainObject{
 
 	/**

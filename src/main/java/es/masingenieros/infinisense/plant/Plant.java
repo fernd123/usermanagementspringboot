@@ -7,12 +7,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import es.masingenieros.infinisense.lib.DomainObject;
 
 @Entity
+@Table(name = "plant")
 public class Plant extends DomainObject{
 
 	private static final long serialVersionUID = 1L;

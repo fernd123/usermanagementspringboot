@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -15,6 +16,7 @@ import es.masingenieros.infinisense.reason.Reason;
 import es.masingenieros.infinisense.user.User;
 
 @Entity
+@Table(name = "visit")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class Visit extends DomainObject{
 
